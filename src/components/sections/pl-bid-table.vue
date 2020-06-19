@@ -1,0 +1,258 @@
+<template>
+    <section class="pl-bidTable">
+        <div class="container">
+            <table class="pl-bidTable__body col-12">
+                <tr>
+                    <th colspan="9" class="pl-bidTable__header">
+                        <div class="pl-bidTable__showMore" @click="onToggle" id="filterBtn">
+                            <img :src=link>
+                            <p class="pl-bidTable__header--text">
+                                Mostrar Filtros
+                            </p>
+                        </div>
+                        <div class="pl-bidTable__search">
+                            <div class="pl-bidTable__search--content">
+                                <img src="images/icons/other-icons/search.svg" alt="">
+                                <pl-input size="large" placeholder="EX.: Diesel">
+                                </pl-input>   
+                            </div>
+                        </div> 
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="9" class="pl-bidTable__filters">
+                        <div class="pl-bidTable__filters--component">
+                            <pl-filters></pl-filters>
+                        </div>
+                    </th>
+                </tr>
+                <tr class="pl-bidTable__labels" >
+                    <th class="pl-bidTable__cod">
+                        <p>#COD.</p>
+                    </th>    
+                    <th>
+                        <p>DATA</p>
+                    </th>    
+                    <th>
+                        <p>COMBUSTÍVEL</p>
+                    </th>   
+                    <th>
+                        <p>QUANTIDADE</p>
+                    </th>    
+                    <th>
+                        <p>FRETE</p>
+                    </th>    
+                    <th>
+                        <p>POSTO</p>
+                    </th>    
+                    <th>
+                        <p>LOCAL</p>
+                    </th>   
+                    <th>
+                        <p>LANCES</p>
+                    </th>
+                </tr>
+                <tr class="pl-bidTable__item" v-for="(item, i) in data" :key="i" :class="`${item.categoryClass}`">
+                    <!--@click="showModal = true"-->
+                    <td>
+                        {{item.code}}
+                    </td>
+                    <td>
+                        21/12/2012
+                    </td>
+                    <td>
+                        
+                        {{item.category}}
+                    </td>
+                    <td>
+                        {{item.amount}}
+                    </td>
+                    <td>
+                        {{item.freight}}
+                    </td>
+                    <td>
+                        {{item.station}}
+                    </td>
+                    <td>
+                        <!-- use the modal component, pass in the prop -->
+                        <pl-modal 
+                        :data='[item.code,item.category, item.amount, item.low_bid, item.freight, item.time_left, item.address, item.bid]'
+                        v-if="showModal" @close="showModal = false"></pl-modal>
+                        {{item.address}}
+                    </td>   
+                    <td class="bid-div" colspan="2">
+                        <div class="bid-item">
+                            <span class="bid-value">{{item.bid}}</span>
+                            <button class="bid-btn" type="button">...</button>
+                        </div>    
+                    </td>
+                </tr>
+            </table>
+            <div class="col-12">
+                <div class="pl-bidTable__button">
+                    <pl-btn type="standard" text="Mostrar Mais">
+                    </pl-btn>
+                </div>
+            </div>
+        </div>
+    </section> 
+</template>
+<script>
+/* eslint-disable */ 
+import PLInput from '@/components/atoms/pl-input';
+import PLModal from '@/components/sections/pl-modal';
+import PLBtn from '@/components/atoms/pl-btn';
+import PLFilters from '@/components/sections/pl-filters';
+export default {
+    props: {
+        data: {
+            type: Array,
+            default: () => ([]),
+        },
+    }, 
+    data: () => ({
+        value: null,
+        showModal: false,
+        showModalBid: false,
+        link : 'images/icons/other-icons/plus.svg',
+    }),
+    components: {
+        'pl-modal': PLModal,
+        'pl-btn': PLBtn,
+        'pl-input': PLInput,
+        'pl-filters': PLFilters,
+    },
+    methods: {
+        onToggle(event){
+            var item = event.target.closest(".pl-bidTable__body--desktop");
+            $(".pl-bidTable__filters--component", item).slideToggle(500);
+            var item = document.getElementById("filterBtn");
+            item.classList.toggle("plus-active");
+            if(this.link == 'images/icons/other-icons/plus.svg'){
+                this.link = 'images/icons/other-icons/minus.svg';
+            } else {
+                this.link = 'images/icons/other-icons/plus.svg';
+            }
+        },
+        showModalBidF(){
+            showModalBid = true;
+        }  
+    }
+    
+}
+</script>
+<style lang="scss">
+.pl-bidTable{
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 50px;
+    table{
+        border-collapse: collapse;
+        background-color: #ffffff;
+    }
+    td{
+        padding:  0 10px 0 10px;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 14px;
+        font-family: $roboto-family;
+        .bid-btn{
+            display: inline-block;
+            width: 20px;
+            padding: 0px;
+            text-align: center;
+            border: 2px solid grey!important;
+            background-color: #fff;
+            border-radius: 2px!important;
+            cursor: pointer;
+            outline: none;
+        }
+        .bid-value{
+            display: inline-block;
+            margin-right: 5px;
+        }
+    }
+    &__header{
+        width: 100%;
+        background-color: $grey;
+        height: 50px;
+        text-align: left;
+        color: $greyTable;
+        text-transform: uppercase;
+    }
+    &__labels{
+        color: #949494;
+        border: 1px solid $middlegrey;
+        font-family: roboto;
+        font-weight: bold;
+    }
+    &__filters{
+        &--component{
+            display: none;
+        }
+    }
+    &__item{
+        height: 100px;
+        border: 1px solid $middlegrey;
+        border-left: 5px solid $greenSuccess;
+        font-family: $roboto-family, sans-serif;
+        font-weight: 700;
+        color: #333333;
+        &--default{
+            padding: 4px;
+            line-height: 20px;
+            background-color: $yellow;
+            color: #fff;
+        }
+        &--danger{
+            padding: 4px;
+            line-height: 20px;
+            color: #fff;
+            background-color: $redDanger;
+        }
+        &--success{
+            padding: 4px;
+            line-height: 20px;
+            color: #fff;
+            background-color: $greenSuccess;
+        }
+    }
+     &__showMore{
+        display: flex;
+        color: #ffffff;
+        align-items: center;
+        cursor: pointer;
+        height: 100%;
+        float: left;
+        width: 18%;
+        padding-left: 10px;
+        p{
+            line-height: 20px;
+            padding-left: 10px;
+        }
+    }
+    &__search{
+        line-height: 100%;
+        width: 30%;
+        height: 100%;
+        padding: 10px;
+        margin-left: 18%;
+        &--content{
+            display: flex;
+            background-color: rgba(white, 0.3);
+            img{
+                padding-right: 10px;
+                padding-left: 10px;
+            }
+            &:focus{
+                outline: 1px solid $yellow;
+            }
+        }
+    }
+    &__button{
+        width: 100%;
+        text-align: center;
+        padding-top: 20px;
+       
+    }
+}
+</style>

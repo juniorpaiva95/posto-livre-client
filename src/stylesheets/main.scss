@@ -1,0 +1,19 @@
+@import "grids";
+@import "mixins";
+@import "variables";
+@import url('https://fonts.googleapis.com/css?family=Barlow:400,500,700|Roboto:400,700&display=swap'); // Isso está sendo chamado várias vezes na renderização.
+
+//on-mobile-only
+.on-mobile-only{
+    display: none;
+    @include grid-media($smartphone-grid){
+        display: inline-block;
+    }
+}
+
+.invalid-feedback {
+  width: 100%;
+  margin-top: .25rem;
+  font-size: 80%;
+  color: #dc3545;
+}

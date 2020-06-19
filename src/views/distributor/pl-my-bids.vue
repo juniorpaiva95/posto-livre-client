@@ -1,0 +1,42 @@
+<template>
+    <div class="pl-my-bids">
+        <div>
+            <pl-advise title="MEUS LANCES" Subtext="Confira todas as suas transações">
+            </pl-advise>
+        </div>  
+        <div class="container">
+            <div>
+                <pl-auctions :data="auctions"></pl-auctions>
+            </div>
+        </div> 
+    </div>
+</template>
+
+<script>
+import PLAdvise from '@/components/sections/pl-advise';
+import PlAuctions from '@/components/sections/pl-auction-table';
+
+export default {
+    components: {
+        'pl-advise': PLAdvise,
+        'pl-auctions': PlAuctions,
+    },
+    data: () => ({
+        auctions: [],
+        showModal: false,
+    }),
+    created() {
+        this.$store.dispatch('auction/fetchDistributorAuctionsWins').then(auctions => {
+            this.auctions = auctions;
+        })
+    }
+};
+</script>
+<style lang="scss">
+.plus-active{
+    color: $yellow!important;
+}
+.pl-my-bids{
+    @include grid-container();
+}
+</style>

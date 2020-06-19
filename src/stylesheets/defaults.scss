@@ -1,0 +1,78 @@
+*, *:after, *:before{
+    box-sizing: border-box;
+}   
+
+body {
+    margin: 0;
+}
+
+a{
+    text-decoration: none;
+    &:visited {
+        color: white;        
+    }
+}
+
+.router-link-active {
+    color: $yellow !important;
+    svg{
+        path{
+            fill: $yellow!important;
+        }
+    }
+}
+
+//grid
+.container{
+    @include outer-container();
+}
+.col{
+    @include grid-column(8);
+    @include grid-push(2);
+    @include grid-media($smartphone-grid){
+        @include grid-column(12);
+    }
+}
+.col-2{
+    @include grid-column(2);
+}
+.col-3{
+    @include grid-column(3);
+    // @include grid-media($smartphone-grid){
+    // }
+}
+.col-4{
+    @include grid-column(4);
+    @include grid-media($smartphone-grid){
+        @include grid-column(12);
+    }
+}
+.col-6{
+    @include grid-column(6);
+    @include grid-media($smartphone-grid){
+        @include grid-column(12);
+    }
+}
+
+.col-8{
+    @include grid-column(8);
+    @include grid-media($smartphone-tablet-grid){
+        @include grid-column(12);
+    }
+}
+.col-10{
+    @include grid-column(10);
+    @include grid-media($smartphone-tablet-grid){
+        @include grid-column(12);
+    }
+}
+
+.col-12{
+    @include grid-column(12);
+    @include grid-media($smartphone-grid){
+        @include grid-column(12);
+    }
+}
+
+
+

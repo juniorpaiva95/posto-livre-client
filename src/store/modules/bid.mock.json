@@ -1,0 +1,58 @@
+{
+    "success" : true,
+    "message" : "Requisição feita com sucesso!",
+    "data" : [
+        {
+            "code" : "0001",
+            "category" : "Gasolina Comum",
+            "categoryClass" : "-gasolinaComum",
+            "station": "Posto 1",
+            "amount" : "15.000L",
+            "low_bid": "2,69",
+            "freight" : "CIF",
+            "time_left" : "<span class='pl-table__item--danger'>Modo Aleátorio</span>",
+            "withdraw": "PORTO CABEDELO (PB)",
+            "address" : "João Pessoa, PB",
+            "bid" : "2.678"
+        },
+         {
+            "code" : "0002",
+            "category" : "Gasolina Aditivada",
+            "categoryClass" : "-gasolinaAditivada",
+            "station": "Posto 2",
+            "amount" : "12.000L",
+            "low_bid": "2,19",
+            "freight" : "FOB",
+            "time_left" : "<span class='pl-table__item--default'>1H : 28 min</span>",
+            "withdraw": "PORTO DE SUAPE (PE)",
+            "address" : "João Pessoa, PB",
+            "bid" : "2.478"
+        },
+        {
+            "code" : "0003",
+            "category" : "Etanol",
+            "categoryClass" : "-etanol",
+            "station": "Posto 3",
+            "amount" : "12.000L",
+            "low_bid": "2,19",
+            "freight" : "FOB",
+            "time_left" : "<span class='pl-table__item--default'>1H : 28 min</span>",
+            "withdraw": "PORTO DE GUAMORÉ (RN)",
+            "address" : "João Pessoa, PB",
+            "bid" : "2.478"
+        },
+        {
+            "code" : "0004",
+            "category" : "Diesel",
+            "categoryClass" : "-diesel",
+            "station": "Posto 4",
+            "amount" : "12.000L",
+            "low_bid": "2,19",
+            "freight" : "FOB",
+            "time_left" : "<span class='pl-table__item--default'>1H : 28 min</span>",
+            "withdraw": "PORTO DE SUAPE (PE)",
+            "address" : "João Pessoa, PB",
+            "bid" : "2.478"
+        }
+    ]
+}
