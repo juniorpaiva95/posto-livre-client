@@ -10,9 +10,9 @@
       'Quem Somos',
       'Começar']"
       :links="[
-      '/',
-      '/',
-      '/bids']"
+      '/#comofunciona',
+      '/#',
+      '/login']"
       >
     </pl-footer>
   </div>

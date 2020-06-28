@@ -50,16 +50,16 @@
                                 type="text"
                                 class="pl-register__input"
                                 placeholder="29.000.000/0001-00"
-                                v-model="form.cpf_or_cnpj"
-                                name="cpf_or_cnpj"
+                                v-model="form.cnpj"
+                                name="cnpj"
                                 :class="{
-                                    'has-error': errors.has('cpf_or_cnpj')
+                                    'has-error': errors.has('cnpj')
                                 }"
                                 v-validate="'required'"
                                 v-mask="'##.###.###/####-##'"
                             />
-                            <div v-show="errors.has('cpf_or_cnpj')" class="invalid-feedback">{{
-                                errors.first('cpf_or_cnpj') }}
+                            <div v-show="errors.has('cnpj')" class="invalid-feedback">{{
+                                errors.first('cnpj') }}
                             </div>
                         </div>
 
@@ -100,7 +100,7 @@
                         <div class="pl-register__formItem col-6">
                             <label class="pl-register__label">Categoria</label>
                             <select
-                                v-model="form.tipo"
+                                v-model="form.type"
                                 name="tipo"
                                 v-validate="'required'"
                                 class="pl-register__input"
@@ -129,7 +129,7 @@
                                 class="pl-register__input"
                                 placeholder="58.000-00"
                                 v-mask="'##.###-###'"
-                                v-model="form.cep"
+                                v-model="form.address.cep"
                                 name="cep"
                                 :class="{ 'has-error': errors.has('cep') }"
                                 v-validate="'required'"
@@ -149,7 +149,7 @@
                                 type="text"
                                 class="pl-register__input"
                                 placeholder="Av. Presidente Nilo Peçanha"
-                                v-model="form.street"
+                                v-model="form.address.street"
                                 v-validate="'required'"
                                 name="logradouro"
                                 :class="{ 'has-error': errors.has('logradouro') }"
@@ -162,7 +162,7 @@
                                 type="text"
                                 class="pl-register__input"
                                 placeholder="178"
-                                v-model="form.number"
+                                v-model="form.address.number"
                                 v-validate="'required'"
                                 name="numero"
                                 :class="{ 'has-error': errors.has('numero') }"
@@ -186,7 +186,7 @@
                                 type="text"
                                 class="pl-register__input"
                                 placeholder="Expedicionários"
-                                v-model="form.neighborhood"
+                                v-model="form.address.neighborhood"
                                 v-validate="'required'"
                                 name="neighborhood"
                                 :class="{ 'has-error': errors.has('neighborhood') }"
@@ -198,7 +198,7 @@
                                 type="text"
                                 class="pl-register__input"
                                 placeholder="João Pessoa"
-                                v-model="form.city"
+                                v-model="form.address.city"
                                 v-validate="'required'"
                                 name="cidade"
                                 :class="{ 'has-error': errors.has('cidade') }"
@@ -211,14 +211,70 @@
                                 class="pl-register__input"
                                 placeholder="Paraíba"
                                 v-validate="'required'"
-                                v-model="form.state"
+                                v-model="form.address.state"
                                 v-mask="'AA'"
                                 name="estado"
                                 :class="{ 'has-error': errors.has('estado') }"
                             />
                         </div>
                     </div>
-                    <div v-if="form.tipo == 1" class="pl-register__form--row">
+                    <div v-if="form.type == 'distributor'" class="pl-register__bank">
+                        <h2>Dados bancarios</h2>
+                        <div class="pl-register__formItem col-6">
+                            <label class="pl-register__label">codigo</label>
+                            <input
+                                type="text"
+                                class="pl-register__input"
+                                placeholder="00"
+                                v-validate="'required'"
+                                v-model="form.bank.code"
+                                v-mask="'##'"
+                                name="codigo"
+                                :class="{ 'has-error': errors.has('codigo') }"
+                            />
+                        </div>
+                        <div class="pl-register__formItem col-6">
+                            <label class="pl-register__label">Agência</label>
+                            <input
+                                type="text"
+                                class="pl-register__input"
+                                placeholder="00"
+                                v-validate="'required'"
+                                v-model="form.bank.agency"
+                                v-mask="'####'"
+                                name="agencia"
+                                :class="{ 'has-error': errors.has('agencia') }"
+                            />
+                        </div>
+                        <div class="pl-register__formItem col-6">
+                            <label class="pl-register__label">Conta</label>
+                            <input
+                                type="text"
+                                class="pl-register__input"
+                                placeholder="00"
+                                v-validate="'required'"
+                                v-model="form.bank.account"
+                                v-mask="'#####'"
+                                name="conta"
+                                :class="{ 'has-error': errors.has('conta') }"
+                            />
+                        </div>
+                        <div class="pl-register__formItem col-6">
+                            <label class="pl-register__label">Tipo</label>
+                            <input
+                                type="text"
+                                class="pl-register__input"
+                                placeholder="00"
+                                v-validate="'required'"
+                                v-model="form.bank.type"
+                                v-mask="'##'"
+                                name="tipo"
+                                :class="{ 'has-error': errors.has('tipo') }"
+                            />
+                        </div>
+
+                    </div>
+                    <div v-if="form.type == 'station'" class="pl-register__form--row">
                         <div
                             class="pl-register__formItem pl-register__file col-12"
                         >
@@ -303,21 +359,29 @@
                     email: "",
                     photo1: "",
                     photo2: "",
-                    cpf_or_cnpj: "",
-                    tipo: "",
+                    cnpj: "",
+                    type: "",
                     phone: "",
                     state_registration: "",
-                    cep: "",
-                    street: "",
-                    city: "",
-                    state: "",
-                    number: "",
-                    neighborhood: "",
+                    address:{
+                        cep: "",
+                        street: "",
+                        city: "",
+                        state: "",
+                        number: "",
+                        neighborhood: "",
+                    },
+                    bank: {
+                        code: "",
+                        agency: "",
+                        account: "",
+                        type: ""
+                    }
                 },
                 showModal: false,
                 options: [
-                    {value: 1, text: "Posto"},
-                    {value: 2, text: "Distribuidor"}
+                    {value: "station", text: "Posto"},
+                    {value: "distributor", text: "Distribuidor"}
                 ]
             };
         },
@@ -330,20 +394,20 @@
                 this.form.photo2 = e.target.files[0];
             },
             loadDataCep() {
-                if (!this.form.cep) {
+                if (!this.form.address.cep) {
                     return false;
                 }
-                let cep = this.form.cep.replace(".", "").replace("-", "");
+                let cep = this.form.address.cep.replace(".", "").replace("-", "");
                 this.loading = true;
                 setTimeout(() => {
                     fetch(`https://viacep.com.br/ws/${cep}/json/`).then(
                         response => {
                             response.json().then(data => {
                                 let {logradouro, localidade, bairro, uf} = data;
-                                this.form.street = logradouro;
-                                this.form.city = localidade;
-                                this.form.neighborhood = bairro;
-                                this.form.state = uf;
+                                this.form.address.street = logradouro;
+                                this.form.address.city = localidade;
+                                this.form.address.neighborhood = bairro;
+                                this.form.address.state = uf;
                                 this.loading = false;
                             });
                         }
@@ -412,9 +476,9 @@
                         // this.photo1 = "";
                         // this.photo2 = "";
                         // this.phone = "";
-                        // this.tipo = "";
+                        // this.type = "";
                         // this.state_registration = "";
-                        // this.cpf_or_cnpj = "";
+                        // this.cnpj = "";
                         // this.$validator.reset();
                         Swal.fire({
                             position: "bottom-end",
@@ -474,9 +538,20 @@
         }
 
         &__address {
+            margin-bottom: 10px;
+            display: inline-block;
+            width: 100%;
+        }
+        &__bank {
             margin-bottom: 50px;
             display: inline-block;
             width: 100%;
+            h2 {
+                @include barlowBold;
+                text-align: center;
+            }
+
+
         }
 
         &__modal {

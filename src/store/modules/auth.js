@@ -115,11 +115,11 @@ export default {
 		 */
 		register({ commit, state }, payload) {
 			return new Promise((resolve, reject) => {
-				apiService.post(`/api/v1/auth/register`, payload)
+				apiService.post(`/users`, payload)
 					.then(response => {
 						if (response.status == 200) {
-							// state.user = response.data.user
-							// commit('setToken', response.data.token)
+							state.user = response.data.user
+							commit('setToken', response.data.token)
 
 							return resolve(response.data.user);
 						}
