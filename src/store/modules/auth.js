@@ -38,7 +38,7 @@ export default {
 	actions: {
 		fetchUser({ state, commit }) {
 			return new Promise((resolve, reject) => {
-				if (!tokenService.getToken()){
+				if (!tokenService.getToken()) {
 					return resolve(null)
 				}
 
@@ -50,7 +50,7 @@ export default {
 					.then(response => {
 						if (response.status == 200) {
 							commit('setUser', response.data.user)
-							
+
 							return resolve(state.user)
 						}
 
@@ -74,22 +74,22 @@ export default {
 		// Login using cnpj
 		login({ state, commit }, payload) {
 			return new Promise((resolve, reject) => {
-				
+
 				apiService.post(`/api/v1/login`, payload).then(response => {
 					if (response.status == 200) {
-						
+
 						let token = response.data.token
 						let user = response.data.user
-						
+
 						commit('setToken', token)
 						commit('setUser', user)
-						
+
 						return resolve(state.user)
 					}
 
 					return reject(response)
 				}, () => {
-					
+
 					Swal.fire({
 						position: "bottom-end",
 						type: "error",
@@ -107,7 +107,7 @@ export default {
 		logout({ commit, state }) {
 			state.user = null
 			commit('removeToken')
-			router.push('/')		
+			router.push('/')
 		},
 
 		/*
@@ -130,96 +130,97 @@ export default {
 					})
 			})
 		},
-    validateResetToken({ state }, token) {
-      return new Promise((resolve, reject) => {
-        apiService.get(`/api/v1/reset-password/${token}`)
-          .then(response => {
-            if (response.status == 200) {
-              return resolve(true)
-            }
+		validateResetToken({ state }, token) {
+			return new Promise((resolve, reject) => {
+				apiService.get(`/api/v1/reset-password/${token}`)
+					.then(response => {
+						if (response.status == 200) {
+							return resolve(true)
+						}
 
-            return resolve(false)
-          }, response => {
-            store.commit('notification/add', {
-              type: 'error',
-              message: response.body.error
-            });
+						return resolve(false)
+					}, response => {
+						store.commit('notification/add', {
+							type: 'error',
+							message: response.body.error
+						});
 
-            return reject(false)
-          })
-      });
-    },
+						return reject(false)
+					})
+			});
+		},
 
-    forgotPassword({ state }, email) {
-      return new Promise((resolve, reject) => {
-        apiService.post(`/api/v1/auth/forgot-password`, {
-          email
-        })
-          .then(response => {
-            if (response.status == 200) {
-              // store.commit('notification/add', {
-              //   type: 'success',
-              //   message: response.data.message
-              // });
-              Swal.fire({
-                position: "bottom-end",
-                type: "success",
-                title: response.data.message,
-                showConfirmButton: false,
-                timer: 3500,
-                toast: true
-              });
+		forgotPassword({ state }, email) {
+			return new Promise((resolve, reject) => {
+				apiService.post(`/api/v1/auth/forgot-password`, {
+					email
+				})
+					.then(response => {
+						if (response.status == 200) {
+							// store.commit('notification/add', {
+							//   type: 'success',
+							//   message: response.data.message
+							// });
+							Swal.fire({
+								position: "bottom-end",
+								type: "success",
+								title: response.data.message,
+								showConfirmButton: false,
+								timer: 3500,
+								toast: true
+							});
 
-              return resolve(true)
-            }
+							return resolve(true)
+						}
 
-            return resolve(false)
-          }, response => {
-            store.commit('notification/add', {
-              type: 'error',
-              message: response.body.error
-            });
-            Swal.fire({
-              position: "bottom-end",
-              type: "error",
-              title: response.data.error,
-              showConfirmButton: false,
-              timer: 3500,
-              toast: true
-            });
+						return resolve(false)
+					}, response => {
+						store.commit('notification/add', {
+							type: 'error',
+							message: response.body.error
+						});
+						Swal.fire({
+							position: "bottom-end",
+							type: "error",
+							title: response.data.error,
+							showConfirmButton: false,
+							timer: 3500,
+							toast: true
+						});
 
-            return resolve(false)
-          })
-      })
-    },
+						return resolve(false)
+					})
+			})
+		},
 
-    resetForgottenPassword({ state }, payload) {
-      return new Promise((resolve, reject) => {
-        apiService.post(`/api/v1/auth/reset-password`, {
-          email: payload.email,
-          token: payload.token,
-          password: payload.password,
-          password_confirmation: payload.password_confirmation
-        })
-          .then(response => {
-            if (response.status == 200) {
-              store.commit('notification/add', {
-                type: 'success',
-                message: 'Senha redefinida com sucesso!'
-              });
-              return resolve(response)
-            }
+		resetForgottenPassword({ state }, payload) {
+			return new Promise((resolve, reject) => {
+				apiService.post(`/api/v1/auth/reset-password`, {
+					email: payload.email,
+					token: payload.token,
+					password: payload.password,
+					password_confirmation: payload.password_confirmation
+				})
+					.then(response => {
+						if (response.status == 200) {
+							store.commit('notification/add', {
+								type: 'success',
+								message: 'Senha redefinida com sucesso!'
+							});
+							return resolve(response)
+						}
 
-            return resolve(false)
-          }, response => {
-            reject(response)
-          })
-      })
-    }
+						return resolve(false)
+					}, response => {
+						reject(response)
+					})
+			})
+		}
 		// No fim
 	}
 }
 
+		//!funções necessarioas???
 		// update({ state }, payload) {
 		// 	return new Promise((resolve, reject) => {
 		// 		Vue.http.patch(`${process.env.VUE_APP_API_URL}/v1/account/profile`, payload)
