@@ -15,6 +15,9 @@ a{
 
 .router-link-active {
     color: $yellow !important;
+    .pl-navitem{
+        color: $yellow !important;
+    }
     svg{
         path{
             fill: $yellow!important;

@@ -1,8 +1,8 @@
 <template>
-  <div class="pl-buttonSelect" :class="[`pl-buttonSelect--${color}`]">
+  <div class="pl-buttonSelect" :class="[`pl-buttonSelect--${color}`]" style="">
     <input class="pl-buttonSelect--input"
            type="radio"
-           name="category"
+           name="fuel_id"
            :value="value"
            :id="`pl-createAuction__freight--buttonSelect` + idKey">
       <label :for="'pl-createAuction__freight--buttonSelect' + idKey">
@@ -25,6 +25,7 @@ export default {
       type: String
     }
   }
+
 };
 </script>
 
@@ -60,7 +61,7 @@ export default {
     }
   }
 
-  &--gasolina {
+  &--gasolina-comum {
     label {
       border-top: 5px solid #faa700;
     }
@@ -70,7 +71,7 @@ export default {
       background: #faa700;
     }
   }
-  &--gasolinaAdt {
+  &--gasolina-aditivada {
     label {
       border-top: 5px solid #01a39d;
     }
@@ -89,7 +90,7 @@ export default {
       background: #8d99ae;
     }
   }
-  &--diesel {
+  &--diesel-s10 {
     label {
       border-top: 5px solid #000000;
     }
@@ -99,7 +100,7 @@ export default {
       background: #000000;
     }
   }
-  &--diesels500{
+  &--diesel-s500{
     label {
       border-top: 5px solid tomato;
     }

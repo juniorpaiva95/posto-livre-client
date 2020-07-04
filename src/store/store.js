@@ -8,6 +8,7 @@ import {
   notification,
   bid,
   faq,
+  fuel,
   station
 } from './modules'
 
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     auction,
     auth,
     faq,
+    fuel,
     logger,
     notification,
     bid,

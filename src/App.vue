@@ -10,9 +10,9 @@
       'Quem Somos',
       'Começar']"
       :links="[
-      '/',
-      '/',
-      '/bids']"
+      '/#comofunciona',
+      '/#',
+      '/login']"
       >
     </pl-footer>
   </div>
@@ -31,12 +31,21 @@ export default {
   computed: {
 		...mapGetters({
       user: 'auth/getUser',
+      station: 'auth/getStation',
     }),
     distributor: function(){
-      return this.user && this.user.last_name == "Distribuidor";
+      /* console.log("printing user in distributor check"); */
+      if(this.user){
+        /* console.log(this.user.roles); */
+      }
+      return this.user && this.user.roles[0].name == "distributor";
     },
     station: function(){
-      return this.user && this.user.last_name == "Posto";
+      /* console.log("printing user in gas_station check"); */
+      if(this.user){
+        /* console.log(this.user.roles); */
+      }
+      return this.user && this.user.roles[0].name == "gas_station";
     }
   },
   components: {

@@ -6,7 +6,7 @@
            v-for="(item, key) in radioButtons"
            :key="item.text">
         <input type="radio"
-               name="withdraw"
+               name="pickup_location"
                checked
                :value="item.value"
                :id="`pl-createAuction__withdraw--name` + key">

@@ -6,7 +6,7 @@
            v-for="(item, key) in radioButtons"
            :key="item.text">
         <input type="radio"
-               name="freight"
+               name="freight_type"
                checked
                :value="item.value"
                :id="`pl-createAuction__freight--name` + key">
@@ -32,7 +32,7 @@ export default {
     radioButtons: {
       two: {
         text: "FOB",
-        value: "1"
+        value: "FOB"
       }
     }
   })

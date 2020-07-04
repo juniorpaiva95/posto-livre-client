@@ -65,12 +65,30 @@ export default {
     }
   },
   actions: {
-    create({ state, commit }, payload) {
+    create: async ({ state, commit, rootState }, payload) => {
+      let stations = await rootState.station;
+      let user = await rootState.auth.user;
+
+      stations.station.forEach(st => {
+        if(st.user_id == user.id){
+          console.log(st.user_id);
+          payload.station_id = st.id;
+
+        }
+      });
+
+
+      // * adding date_start and date_finish to payload
+
+      console.log(payload);
       return new Promise((resolve, reject) => {
-        apiService.post(`/api/v1/station/auctions`, payload).then(
+        apiService.post(`/api/v1/auctions`, payload).then(
           response => {
-            if (response.status == 201) {
-              commit("pushAuction", response.data.auction);
+            console.log("auctions response");
+            console.log(response);
+
+            if (response.status == 200) {
+              commit("pushAuction", response.data);
 
               Swal.fire({
                 position: "bottom-end",
@@ -82,6 +100,16 @@ export default {
               });
 
               return resolve(state.auctions);
+            }else if (response.status == 400){
+              Swal.fire({
+                position: "bottom-end",
+                type: "error",
+                title: response.error.message,
+                showConfirmButton: false,
+                timer: 8500,
+                toast: true
+              });
+  
             }
 
             return reject(response);
@@ -106,17 +134,23 @@ export default {
         commit('incrementPage');
       }
         let user = await rootState.auth.user;
-        let url = "/api/v1/station/auctions";
+        let url = "/api/v1/auctions";
 
-        if (user.last_name === "Distribuidor") {
+        /* if (user.roles.name[0] === "distributor") {
           url = "/api/v1/distributor/auctions";
-        } else if (user.last_name === "Posto") {
+        } else if (user.roles[0].name === "gas_station") {
           url = "/api/v1/station/auctions";
-        }
+        } */
+        //* checking filters
         let filterQueryString = filterToQuery(state.filters);
+        
+        console.log("filterQueryString");
+        console.log(filterQueryString);
         await apiService.get(`${url}?${filterQueryString}`).then(response => {
           if (response.status == 200) {
             let { data, ...rest } = response.data;
+            console.log("this is the return of auctions.js => fetchAuctions");
+            console.log(data);
             if (concat) {
               commit("concatAuctions", data);
             } else {

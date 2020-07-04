@@ -19,6 +19,8 @@ export default {
     actions: {
         fetchStation({ state, commit }) {
 			return new Promise((resolve, reject) => {
+				console.log(" new station being called ****************************")
+
 				if (!tokenService.getToken()){
 					return resolve(null)
 				}
@@ -27,11 +29,14 @@ export default {
 					return resolve(state.station)
 				}
 
-				apiService.get(`/api/v1/users/stations`)
+				console.log(" new station after checks")
+
+				apiService.get(`/api/v1/stations`)
 					.then(response => {
-                        console.log(response)
+                        /* console.log(" new station found = teste")
+                        console.log(response) */
 						if (response.status == 200) {
-							commit('setStation', response.data.station)
+							commit('setStation', response.data.stations)
 							return resolve(state.station)
 						}
 

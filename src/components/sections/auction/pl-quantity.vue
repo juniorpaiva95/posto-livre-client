@@ -2,7 +2,7 @@
   <div class="pl-createAuction__quantity">
     <pl-subsectionHeader :svg="svg" :text="text" :alt="alt"></pl-subsectionHeader>
     <div class="pl-createAuction__quantity--formItem">
-      <input type="text" 
+      <input type="number" 
              class="pl-createAuction__quantity--input" 
              placeholder="EX: 8.000" 
              name="fuel_amount">

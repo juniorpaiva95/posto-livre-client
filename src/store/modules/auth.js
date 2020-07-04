@@ -1,6 +1,7 @@
 import store from '@/store/store'
 import apiService from '@/services/api'
 import tokenService from '@/services/storage'
+import userService from '@/services/userStorage'
 import router from '@/router/router'
 import Swal from "sweetalert2";
 
@@ -8,11 +9,18 @@ export default {
 	namespaced: true,
 	state: {
 		route: null,
-		user: null
+		user: null,
+		station: null
 	},
 	getters: {
 		getUser(state) {
 			return state.user
+		},
+		getStation(state) {
+			return state.station
+		},
+		getUserLocal(){
+			userService.getUser()
 		},
 		getToken() {
 			return tokenService.getToken()
@@ -24,12 +32,23 @@ export default {
 	mutations: {
 		setUser(state, user) {
 			state.user = user;
+			userService.saveUser(user);
+		},
+		setStation(state, station) {
+			state.station = station;
+			userService.saveStation(station);
 		},
 		setToken(state, token) {
 			tokenService.saveToken(token)
 		},
 		removeToken() {
 			tokenService.removeToken()
+		},
+		removeUser() {
+			userService.removeUser()
+		},
+		removeStation() {
+			userService.removeStation()
 		},
 		setRoute(state, name) {
 			state.route = name
@@ -38,7 +57,10 @@ export default {
 	actions: {
 		fetchUser({ state, commit }) {
 			return new Promise((resolve, reject) => {
-				if (!tokenService.getToken()){
+				if (!tokenService.getToken()) {
+					return resolve(null)
+				}
+				if (!userService.getUser()) {
 					return resolve(null)
 				}
 
@@ -46,11 +68,25 @@ export default {
 					return resolve(state.user)
 				}
 
-				apiService.get(`/api/v1/auth/profile`)
+				/* apiService.get(`/api/v1/auth/profile`) */
+				apiService.get(`/api/v1/users?search=id%3A${userService.getUser().id}`)
 					.then(response => {
 						if (response.status == 200) {
-							commit('setUser', response.data.user)
-							
+							/* commit('setUser', response.data.user) */
+							commit('setUser', userService.getUser())
+
+							/* if(userService.getUser().roles.name == "gas_station"){
+								apiService.get(`/api/v1/stations?search=user_id%3A${userService.getUser().id}`)
+								.then(response => {
+									if (response.status == 200) {								
+										commit('setStation', response.data.stations)
+										state.station = response.data.stations;
+										return resolve(state.station)
+
+									}
+								})
+							} */
+	
 							return resolve(state.user)
 						}
 
@@ -67,6 +103,8 @@ export default {
 						});
 
 						commit('removeToken')
+						commit('removeUser')
+						commit('removeStation')
 					})
 			})
 		},
@@ -74,22 +112,34 @@ export default {
 		// Login using cnpj
 		login({ state, commit }, payload) {
 			return new Promise((resolve, reject) => {
-				
+
 				apiService.post(`/api/v1/login`, payload).then(response => {
 					if (response.status == 200) {
-						
-						let token = response.data.token
+
+						let token = response.data.access_token
 						let user = response.data.user
-						
+
+	
 						commit('setToken', token)
 						commit('setUser', user)
-						
+
+						if(user.roles.name == "gas_station"){
+							apiService.get(`/api/v1/stations?search=user_id%3A${user.id}`)
+							.then(response => {
+								if (response.status == 200) {								
+									commit('setStation', response.data.stations)
+									state.station = response.data.stations;
+
+								}
+							})
+						}
+
 						return resolve(state.user)
 					}
 
 					return reject(response)
 				}, () => {
-					
+
 					Swal.fire({
 						position: "bottom-end",
 						type: "error",
@@ -107,7 +157,8 @@ export default {
 		logout({ commit, state }) {
 			state.user = null
 			commit('removeToken')
-			router.push('/')		
+			commit('removeUser')
+			router.push('/')
 		},
 
 		/*
@@ -115,11 +166,11 @@ export default {
 		 */
 		register({ commit, state }, payload) {
 			return new Promise((resolve, reject) => {
-				apiService.post(`/api/v1/auth/register`, payload)
+				apiService.post(`/users`, payload)
 					.then(response => {
 						if (response.status == 200) {
-							// state.user = response.data.user
-							// commit('setToken', response.data.token)
+							state.user = response.data.user
+							commit('setToken', response.data.access_token)
 
 							return resolve(response.data.user);
 						}
@@ -130,96 +181,97 @@ export default {
 					})
 			})
 		},
-    validateResetToken({ state }, token) {
-      return new Promise((resolve, reject) => {
-        apiService.get(`/api/v1/reset-password/${token}`)
-          .then(response => {
-            if (response.status == 200) {
-              return resolve(true)
-            }
+		validateResetToken({ state }, token) {
+			return new Promise((resolve, reject) => {
+				apiService.get(`/api/v1/reset-password/${token}`)
+					.then(response => {
+						if (response.status == 200) {
+							return resolve(true)
+						}
 
-            return resolve(false)
-          }, response => {
-            store.commit('notification/add', {
-              type: 'error',
-              message: response.body.error
-            });
+						return resolve(false)
+					}, response => {
+						store.commit('notification/add', {
+							type: 'error',
+							message: response.body.error
+						});
 
-            return reject(false)
-          })
-      });
-    },
+						return reject(false)
+					})
+			});
+		},
 
-    forgotPassword({ state }, email) {
-      return new Promise((resolve, reject) => {
-        apiService.post(`/api/v1/auth/forgot-password`, {
-          email
-        })
-          .then(response => {
-            if (response.status == 200) {
-              // store.commit('notification/add', {
-              //   type: 'success',
-              //   message: response.data.message
-              // });
-              Swal.fire({
-                position: "bottom-end",
-                type: "success",
-                title: response.data.message,
-                showConfirmButton: false,
-                timer: 3500,
-                toast: true
-              });
+		forgotPassword({ state }, email) {
+			return new Promise((resolve, reject) => {
+				apiService.post(`/api/v1/auth/forgot-password`, {
+					email
+				})
+					.then(response => {
+						if (response.status == 200) {
+							// store.commit('notification/add', {
+							//   type: 'success',
+							//   message: response.data.message
+							// });
+							Swal.fire({
+								position: "bottom-end",
+								type: "success",
+								title: response.data.message,
+								showConfirmButton: false,
+								timer: 3500,
+								toast: true
+							});
 
-              return resolve(true)
-            }
+							return resolve(true)
+						}
 
-            return resolve(false)
-          }, response => {
-            store.commit('notification/add', {
-              type: 'error',
-              message: response.body.error
-            });
-            Swal.fire({
-              position: "bottom-end",
-              type: "error",
-              title: response.data.error,
-              showConfirmButton: false,
-              timer: 3500,
-              toast: true
-            });
+						return resolve(false)
+					}, response => {
+						store.commit('notification/add', {
+							type: 'error',
+							message: response.body.error
+						});
+						Swal.fire({
+							position: "bottom-end",
+							type: "error",
+							title: response.data.error,
+							showConfirmButton: false,
+							timer: 3500,
+							toast: true
+						});
 
-            return resolve(false)
-          })
-      })
-    },
+						return resolve(false)
+					})
+			})
+		},
 
-    resetForgottenPassword({ state }, payload) {
-      return new Promise((resolve, reject) => {
-        apiService.post(`/api/v1/auth/reset-password`, {
-          email: payload.email,
-          token: payload.token,
-          password: payload.password,
-          password_confirmation: payload.password_confirmation
-        })
-          .then(response => {
-            if (response.status == 200) {
-              store.commit('notification/add', {
-                type: 'success',
-                message: 'Senha redefinida com sucesso!'
-              });
-              return resolve(response)
-            }
+		resetForgottenPassword({ state }, payload) {
+			return new Promise((resolve, reject) => {
+				apiService.post(`/api/v1/auth/reset-password`, {
+					email: payload.email,
+					token: payload.token,
+					password: payload.password,
+					password_confirmation: payload.password_confirmation
+				})
+					.then(response => {
+						if (response.status == 200) {
+							store.commit('notification/add', {
+								type: 'success',
+								message: 'Senha redefinida com sucesso!'
+							});
+							return resolve(response)
+						}
 
-            return resolve(false)
-          }, response => {
-            reject(response)
-          })
-      })
-    }
+						return resolve(false)
+					}, response => {
+						reject(response)
+					})
+			})
+		}
 		// No fim
 	}
 }
 
+		//!funções necessarioas???
 		// update({ state }, payload) {
 		// 	return new Promise((resolve, reject) => {
 		// 		Vue.http.patch(`${process.env.VUE_APP_API_URL}/v1/account/profile`, payload)
