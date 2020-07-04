@@ -1,9 +1,10 @@
 import moment from "moment";
 
+moment.locale('pt-br');
+
 export default (value) => {
   if (value) {
-    let data = moment(value.date);
-    return data.format('D/M/Y HH:mm:ss');
+    return moment(value).format("DD/MM/YYYY HH:mm");
   }
 
 }

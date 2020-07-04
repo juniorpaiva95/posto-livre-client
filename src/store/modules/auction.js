@@ -8,14 +8,16 @@ const INITIAL_STATE = () => {
     pagination: "",
     concat: false,
     filters: {
+      include: "station,fuel,bids",
       search: "",
+      searchFields: "",
       status: 1,
       categoria: [],
       cidade: "",
       estado: "",
       relevancia: "",
       page: 1,
-      perPage: 30
+      limit: 30
     }
   }
 };
@@ -134,7 +136,7 @@ export default {
         commit('incrementPage');
       }
       let user = await rootState.auth.user;
-      let url = "/api/v1/auctions?include=station,fuel";
+      let url = "/api/v1/auctions";
 
       /* if (user.roles.name[0] === "distributor") {
         url = "/api/v1/distributor/auctions";
@@ -146,7 +148,7 @@ export default {
 
       console.log("filterQueryString");
       console.log(filterQueryString);
-      await apiService.get(`${url}&${filterQueryString}`).then(response => {
+      await apiService.get(`${url}?${filterQueryString}`).then(response => {
         if (response.status == 200) {
           /* let { data, ...rest } = response.data; */
           let data = response.data.auctions;

@@ -17,22 +17,22 @@
           <div class="pl-modal__content--itens">
             <div class="pl-modal__content--itens--data">
               <div class="pl-modal__content--itens--code">
-                <p class="pl-modal__content--itens--title">#</p>
-                <p class="pl-modal__content--itens--text">{{ item.code }}</p>
+                <p class="pl-modal__content--itens--title">ID</p>
+                <p class="pl-modal__content--itens--text">{{ item.id }}</p>
               </div>
               <div class="pl-modal__content--itens--freight">
                 <p class="pl-modal__content--itens--title">frete</p>
-                <p class="pl-modal__content--itens--text">{{ item.freight }}</p>
+                <p class="pl-modal__content--itens--text">{{ item.freight_type }}</p>
               </div>
             </div>
             <div class="pl-modal__content--itens--data">
               <div class="pl-modal__content--itens--code">
                 <p class="pl-modal__content--itens--title">Data</p>
-                <p class="pl-modal__content--itens--text">{{ item.created_at }}</p>
+                <p class="pl-modal__content--itens--text">{{ item.created_at | datetime }}</p>
               </div>
               <div class="pl-modal__content--itens--freight">
                 <p class="pl-modal__content--itens--title">Combustível</p>
-                <p class="pl-modal__content--itens--text">{{ item.category }}</p>
+                <p class="pl-modal__content--itens--text">{{ item.fuel.name }}</p>
               </div>
             </div>
             <div class="pl-modal__content--itens--data">
@@ -40,22 +40,22 @@
                 <p class="pl-modal__content--itens--title">status</p>
                 <p class="pl-modal__content--itens--text--stats">
                   {{ item.status }}
-                  <pl-countdown :auction="item" :date="item.time_left" :isActive="item.status"></pl-countdown>
+                  <pl-countdown :auction="item" :date="new Date(item.date_finish)" :isActive="item.status"></pl-countdown>
                 </p>
               </div>
               <div class="pl-modal__content--itens--freight">
                 <p class="pl-modal__content--itens--title">Posto</p>
-                <p>{{ item.station.social_reason }}</p>
+                <p>{{ item.station.user.social_reason }}</p>
               </div>
             </div>
             <div class="pl-modal__content--itens--data">
               <div class="pl-modal__content--itens--code">
                 <p class="pl-modal__content--itens--title">Quantidade</p>
-                <p>{{ item.amount }}L</p>
+                <p>{{ item.fuel_amount }}L</p>
               </div>
               <div class="pl-modal__content--itens--freight">
                 <p class="pl-modal__content--itens--title">local</p>
-                <p>{{ item.withdraw }}</p>
+                <p>{{ item.pickup_location }}</p>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@
               <div class="pl-modal__content--bids--item--bid">
                 <p
                   :class="{ 'pl-modal__content--bids--item--bid--first': index === 0, 'pl-modal__content--bids--item--bid': index !== 0 }"
-                >{{ value.value.formatted }}</p>
+                >{{ value.value }}</p>
               </div>
             </div>
           </div>
@@ -100,8 +100,9 @@ export default {
   computed: {
     sortBidsByAmount: function() {
       let item = this.item;
-      return item.bids.sort((a, b) => {
-        return a.value.amount - b.value.amount;
+      return item.bids.bids.sort((a, b) => {
+        console.log(a);
+        return a.value - b.value;
       });
     }
   },

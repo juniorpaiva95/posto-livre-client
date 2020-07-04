@@ -67,7 +67,7 @@ router.beforeEach (async (to, from, next) => {
   if (tokenService.getToken() && store.state.auth.user == null) {
     let user = await store.dispatch('auth/fetchUser');
 
-    if (user.roles[0].name == 'gas_station') {
+    if (user !== null && user.roles[0].name == 'gas_station') {
       store.dispatch('station/fetchStation');
     }
 

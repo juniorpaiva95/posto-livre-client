@@ -38,14 +38,14 @@ export default {
       if(this.user){
         /* console.log(this.user.roles); */
       }
-      return this.user && this.user.roles[0].name == "distributor";
+      return this.user !== null && this.user.roles[0].name == "distributor";
     },
     station: function(){
       /* console.log("printing user in gas_station check"); */
       if(this.user){
         /* console.log(this.user.roles); */
       }
-      return this.user && this.user.roles[0].name == "gas_station";
+      return this.user !== null && this.user.roles[0].name == "gas_station";
     }
   },
   components: {

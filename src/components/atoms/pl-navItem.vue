@@ -15,7 +15,7 @@
     text-transform: uppercase;
     font-family:  'Barlow', sans-serif;
     font-weight: 500;
-    color: #B7B7B7;
+    color: #ffffff;
     &:hover{
         color: $yellow;
     }
