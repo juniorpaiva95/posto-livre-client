@@ -1,6 +1,6 @@
 import apiService from "@/services/api";
 import Swal from "sweetalert2";
-import {filterToQuery} from "../../utils/api/util";
+import { filterToQuery } from "../../utils/api/util";
 
 const INITIAL_STATE = () => {
   return {
@@ -70,7 +70,7 @@ export default {
       let user = await rootState.auth.user;
 
       stations.station.forEach(st => {
-        if(st.user_id == user.id){
+        if (st.user_id == user.id) {
           console.log(st.user_id);
           payload.station_id = st.id;
 
@@ -100,7 +100,7 @@ export default {
               });
 
               return resolve(state.auctions);
-            }else if (response.status == 400){
+            } else if (response.status == 400) {
               Swal.fire({
                 position: "bottom-end",
                 type: "error",
@@ -109,7 +109,7 @@ export default {
                 timer: 8500,
                 toast: true
               });
-  
+
             }
 
             return reject(response);
@@ -133,33 +133,37 @@ export default {
       if (concat && !fromOriginFilters) {
         commit('incrementPage');
       }
-        let user = await rootState.auth.user;
-        let url = "/api/v1/auctions";
+      let user = await rootState.auth.user;
+      let url = "/api/v1/auctions?include=station,fuel";
 
-        /* if (user.roles.name[0] === "distributor") {
-          url = "/api/v1/distributor/auctions";
-        } else if (user.roles[0].name === "gas_station") {
-          url = "/api/v1/station/auctions";
-        } */
-        //* checking filters
-        let filterQueryString = filterToQuery(state.filters);
-        
-        console.log("filterQueryString");
-        console.log(filterQueryString);
-        await apiService.get(`${url}?${filterQueryString}`).then(response => {
-          if (response.status == 200) {
-            let { data, ...rest } = response.data;
-            console.log("this is the return of auctions.js => fetchAuctions");
-            console.log(data);
-            if (concat) {
-              commit("concatAuctions", data);
-            } else {
-              commit("setAuctions", data);
-            }
-            commit("setPagination", rest);
+      /* if (user.roles.name[0] === "distributor") {
+        url = "/api/v1/distributor/auctions";
+      } else if (user.roles[0].name === "gas_station") {
+        url = "/api/v1/station/auctions";
+      } */
+      //* checking filters
+      let filterQueryString = filterToQuery(state.filters);
+
+      console.log("filterQueryString");
+      console.log(filterQueryString);
+      await apiService.get(`${url}&${filterQueryString}`).then(response => {
+        if (response.status == 200) {
+          /* let { data, ...rest } = response.data; */
+          let data = response.data.auctions;
+          console.log("this is the return of auctions.js => fetchAuctions");
+          console.log(concat);
+          if (concat) {
+            commit("concatAuctions", data);
+          } else {
+            commit("setAuctions", data);
           }
-        });
+          /* commit("setPagination", rest); */
+          console.log(state.auctions);
+
+        }
+      });
     },
+
     fetchDistributorAuctionsWins({ state, commit }) {
       return new Promise((resolve, reject) => {
         commit('withoutPaginate');

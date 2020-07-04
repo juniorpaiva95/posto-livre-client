@@ -169,8 +169,8 @@ export default {
 				apiService.post(`/users`, payload)
 					.then(response => {
 						if (response.status == 200) {
-							state.user = response.data.user
-							commit('setToken', response.data.access_token)
+							/* state.user = response.data.user
+							commit('setToken', response.data.access_token) */
 
 							return resolve(response.data.user);
 						}

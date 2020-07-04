@@ -56,29 +56,29 @@
                     <td>
                     </td>
                 </tr>
-                <tr class="pl-table__item" v-for="(item, i) in items" :key="i" :class="`${item.categoryClass}`">
+                <tr class="pl-table__item" v-for="(item, i) in items" :key="i" :class="`-${item.fuel.slug}`">
                     <!--@click="showModal = true"-->
                     <td>
-                        {{item.code}}
+                        {{i}}<!-- item.code -->
                     </td>
                     <td>
-                        {{item.category}}
+                        {{item.fuel.name}}
                     </td>
                     <td>
-                        {{item.amount}}L
+                        {{item.fuel_amount}} L
                     </td>
                     <!-- <t
                         {{item.low_bid}}
                     </td> -->
                     <td>
-                        {{item.freight}}
+                        {{item.freight_type}}
                     </td>
                     <td slot="time_left">
-                        <pl-countdown @handleOverdue="disableBtnDarLance(item)" :auction="item" :date='item.time_left' :isActive="item.status"></pl-countdown>
+                        <pl-countdown @handleOverdue="disableBtnDarLance(item)" :auction="item" :date='new Date(item.date_finish)' :isActive="item.status"></pl-countdown>
                     </td>
                     <td>
                         <!-- use the modal component, pass in the prop -->
-                        <pl-modal 
+                        <!-- <pl-modal 
                             :data='[
                                 item.code,
                                 item.category, 
@@ -89,11 +89,24 @@
                                 item.address, 
                                 item.bid
                             ]'
+                        v-if="showModal" @close="showModal = false"></pl-modal> -->
+                        <pl-modal 
+                            :data='[
+                                i,
+                                item.fuel.name, 
+                                item.fuel_amount, 
+                                0, 
+                                item.freight_type, 
+                                new Date(item.date_finish), 
+                                item.pickup_location, 
+                                item.bid
+                            ]'
                         v-if="showModal" @close="showModal = false"></pl-modal>
-                        {{item.withdraw}}
+
+                        {{item.pickup_location}}
                     </td>   
                     <td>
-                        {{item.bid.formatted ||  'Sem lances'}}
+                        {{item.bid ||  'Sem lances'}}
                     </td>
                     <td class="pl-table__input">
                         <template v-if="distributor && !btnIsBlocked(item)">
@@ -214,18 +227,22 @@ export default {
         padding: 0 10px 0 10px;
         font-size: 14px;
         font-family: $roboto-family;
+        font-weight: bold;
     }
-    .-gasolinaComum{
+    .-gasolina-comum{
         border-left: 5px solid $yellow!important;
     }
-    .-gasolinaAditivada{
+    .-gasolina-aditivada{
         border-left: 5px solid #01A39D!important;
     }
     .-etanol{
         border-left: 5px solid #8D99AE!important;
     }
-    .-diesel{
+    .-diesel-s10{
         border-left: 5px solid #000000!important;
+    }
+    .-diesel-s500{
+        border-left: 5px solid tomato!important;
     }
     &__header{
         width: 100%;

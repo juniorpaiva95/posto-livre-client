@@ -5,7 +5,7 @@
             </pl-advise>
         </div>    
         
-        <div v-if="!isMobile()">
+        <div v-if="!isMobile()"><!-- isMobile() -->
             <pl-table class="container" :data='auctions'>
             </pl-table>
         </div>

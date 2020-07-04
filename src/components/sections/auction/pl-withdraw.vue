@@ -2,6 +2,13 @@
   <div class="pl-createAuction__withdraw">
     <pl-subsectionHeader :svg="svg" :text="text" :alt="alt"></pl-subsectionHeader>
     <div class="pl-createAuction__withdraw--content">
+      <div class="pl-createAuction__withdraw--confirm col-12">
+        <input type="checkbox" name="confirm_price" class="pl-" id="pl-createAuction__withdraw--checkbox">
+        <label
+          class="pl-createAuction__withdraw__label--checkbox"
+          for="pl-createAuction__withdraw--checkbox"
+        >Ao continuar concordo que o valor do litro do combustível poderá sofrer variações em decorrência do frete e da tributação aplicada em cada Estado.</label>
+      </div>
       <div class="pl-createAuction__withdraw--radioArea"
            v-for="(item, key) in radioButtons"
            :key="item.text">
@@ -49,6 +56,24 @@ export default {
 <style lang="scss">
 .pl-createAuction {
   &__withdraw {
+    &__label--checkbox {
+      @include robotoNormal;
+      color: $darkgrey;
+      text-transform: none;
+      letter-spacing: 0.03em;
+      font-size: 14px;
+      text-decoration: none;
+      margin-left: unset;
+    }
+    &--confirm{
+      text-align: center;
+
+    }
+
+    &--checkbox {
+      margin-right: 40%;
+    }
+
     &--content {
       display: flex;
       justify-content: space-evenly;

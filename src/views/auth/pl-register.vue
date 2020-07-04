@@ -279,20 +279,20 @@
                             class="pl-register__formItem pl-register__file col-12"
                         >
                             <label class="pl-register__label"
-                            >ESCOLHA 2 IMAGENS DO POSTO</label
+                            >F DO POSTO</label
                             >
                             <input
                                 type="file"
                                 class="pl-register__input pl-register__fileInput"
                                 ref="myVueDropzone"
                                 id="dropzone"
-                                name="photo1"
+                                name="file[]"
                                 @change="carregandoArquivo1"
                             />
                             <input
                                 type="file"
                                 class="pl-register__input pl-register__fileInput"
-                                name="photo2"
+                                name="file[]"
                                 id="dropzone"
                                 @change="carregandoArquivo2"
                                 v-validate="'required'"
@@ -362,8 +362,9 @@
                     cnpj: "",
                     type: "",
                     phone: "",
+                    unit_id: "953732c0-bd99-11ea-a410-9b398194640f",
                     state_registration: "",
-                    address:{
+                    address:{/* 953732c0-bd99-11ea-a410-9b398194640f */
                         cep: "",
                         street: "",
                         city: "",
@@ -427,8 +428,32 @@
                         };
 
                         this.loading = true;
+                        var formData = this.form;
+                        if(this.form.type == 'station'){
+                            console.log("formulario tipo station");
+                            formData = new FormData();
+                            console.log("transform to form data");
+                            formData.append('email', this.form.email); 
+                            formData.append('cnpj', this.form.cnpj); 
+                            formData.append('social_reason', this.form.social_reason); 
+                            formData.append('type', this.form.type); 
+                            formData.append('state_registration', this.form.state_registration); 
+                            formData.append('unit_id', this.form.unit_id); 
+                            formData.append('address[city]', this.form.address.city); 
+                            formData.append('address[state]', this.form.address.state); 
+                            formData.append('address[street]', this.form.address.street); 
+                            formData.append('address[number]', this.form.address.number); 
+                            formData.append('address[cep]', this.form.address.cep); 
+                            formData.append('address[neighborhood]', this.form.address.neighborhood); 
+                            formData.append('file[]', $('input[type=file]')[0].files[0]); 
+                            console.log("adding first pic");
+                            formData.append('file[]', $('input[type=file]')[1].files[0]); 
+                            console.log("adding second pic + ending");
+                            console.log(formData);
+
+                        }
                         this.$store
-                            .dispatch("auth/register", this.form, config)
+                            .dispatch("auth/register", formData, config)
                             .then(user => {
                                 Swal.fire({
                                     title: "Os dados foram enviados com sucesso!",
@@ -438,7 +463,7 @@
                                     type: "success",
                                     timer: 5000
                                 });
-                                this.loading = false;
+                                this.loading = false; 
                                 this.$router.push({name: 'login'});
 
                                 //if (user.roles.name === 'gas_station') {
