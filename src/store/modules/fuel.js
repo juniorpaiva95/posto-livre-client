@@ -3,26 +3,26 @@ import apiService from '@/services/api.js'
 export default {
     namespaced: true,
     state: {
-        faqs: []
+        fuels: []
     },
     getters: {
-        getFaqs(state) {
-            return state.faqs
+        getFuels(state) {
+            return state.fuels
         },
     },
     mutations: {
-      setFaqs(state, faqs) {
-        state.faqs = faqs;
+      setFuels(state, fuels) {
+        state.fuels = fuels;
       }
     },
     actions: {
-        fetchFaqs({ state, commit }) {
+        fetchFuels({ state, commit }) {
             return new Promise((resolve, reject) => {
-                apiService.get(`${process.env.VUE_APP_API_URL}/api/v1/questions?include=answers`)
+                apiService.get(`${process.env.VUE_APP_API_URL}/api/v1/fuel`)
                     .then(response => {
                         if (response.status == 200) {
-                          commit('setFaqs', response.data);
-                            return resolve(state.faqs)
+                          commit('setFuels', response.data); 
+                            return resolve(state.fuels)
                         }
                         return reject(response)
                     })

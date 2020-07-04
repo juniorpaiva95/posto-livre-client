@@ -10,7 +10,7 @@
             </pl-table>
         </div>
         <div v-else>
-            <pl-table-mobile :data='auctions'>
+            <pl-table-mobile :data='auctions'> 
             </pl-table-mobile> 
         </div>
         <pl-questions title="Perguntas frequentes"></pl-questions>
@@ -52,6 +52,8 @@ export default {
 
         await this.$store.commit('auction/setFilters', { status : 1 });
         this.$store.dispatch('auction/fetchAuctions').then(auctions => {
+            console.log(" this is the auctions returned");
+            console.log(auctions);
             this.auctions = auctions;
         })
     }

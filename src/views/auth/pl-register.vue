@@ -440,11 +440,12 @@
                                 });
                                 this.loading = false;
                                 this.$router.push({name: 'login'});
-                                // if (user.last_name === 'Posto') {
-                                //     this.$router.push({ name: "station.feed" });
-                                // } else {
-                                //     this.$router.push({ name: "distributor.feed" });
-                                // }
+
+                                //if (user.roles.name === 'gas_station') {
+                                //    this.$router.push({ name: "station.feed" });
+                                //} else {
+                                //    this.$router.push({ name: "distributor.feed" });
+                                //}
 
                             }).catch(err => {
                             this.loading = false;

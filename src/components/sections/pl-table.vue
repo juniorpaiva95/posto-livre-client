@@ -132,7 +132,7 @@ export default {
 		...mapGetters({ user: 'auth/getUser', auctionPagination: 'auction/getPagination' }),
         distributor: function(){
             
-            return this.user && this.user.last_name == "Distribuidor";
+            return this.user && this.user.roles.name == "distributor";
         },
         btnShowMoreIsVisible: function() {
             // @TODO: Melhorar 

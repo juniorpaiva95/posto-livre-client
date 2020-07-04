@@ -1,7 +1,7 @@
 <template>
     <div class="pl-header-station__profile dropdown">
         <button class="pl-header-station__profile--nav">
-            <p class="pl-header-station__profile--nav--text">{{ user.first_name }}</p>
+            <p class="pl-header-station__profile--nav--text">{{ user.social_reason }}</p>
             <span class="pl-header-station__profile--nav--expand"><img src="images/icons/other-icons/expand.svg"></span>
         </button>
         <div class="pl-header-station__profile--nav--expanded dropdown-content">

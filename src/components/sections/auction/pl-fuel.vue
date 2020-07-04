@@ -3,12 +3,12 @@
     <pl-subsectionHeader :svg="svg" :text="text" :alt="alt"></pl-subsectionHeader>
     <div class="pl-createAuction__fuel--box">
       <div class="pl-createAuction__fuel--buttons">
-        <pl-buttonSelect v-for="item in buttons"
-                        :color="item.color"
-                        :key="item.color"
-                        :value="item.value"
-                        :idKey="item.key">
-          {{ item.text }}
+        <pl-buttonSelect v-for="item in fuel.fuels"
+                        :color="item.slug"
+                        :key="item.color_hex"
+                        :value="item.id"
+                        :idKey="item.id">
+          {{ item.name }}
           </pl-buttonSelect>
       </div>
     </div>
@@ -28,6 +28,7 @@ export default {
     svg: "images/icons/create-auction/fuel.svg",
     alt: "Tipo de Combustível",
     text: "SELECIONE UM COMBUSTÍVEL",
+    fuel: [],
     buttons: {
       gasolina: {
         size: "md",
@@ -65,7 +66,12 @@ export default {
         key: "5"
       }
     }
-  })
+  }),
+  mounted() {
+    this.$store.dispatch('fuel/fetchFuels').then(fuels => { 
+        this.fuel = fuels;
+    });
+  },
 };
 </script>
 

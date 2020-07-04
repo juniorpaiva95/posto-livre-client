@@ -38,6 +38,9 @@ export default {
     onSubmit() {
       let form    = document.querySelector('.pl-createAuction__form');
       let payload = Object.fromEntries(new FormData(form));
+      /* appending data to form */
+
+      payload.station_id = this.$store;
       
       this.$validator.validate().then(success => {
         setTimeout(() => {

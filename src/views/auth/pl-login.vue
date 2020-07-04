@@ -77,9 +77,14 @@ export default {
             username: this.username,
             password: this.password
           }).then((user) => {
-            if(user.last_name == 'Posto'){
+            console.log("printing user inside login");
+            console.log(user);
+            if(user.roles[0].name == 'gas_station'){
+                this.$store.dispatch('station/fetchStation');
+                /* console.log("is a station"); */
                 this.$router.push({ name: 'station.feed' })
             }else{
+                /* console.log("is a distributor"); */
                 this.$router.push({ name: 'distributor.feed' })
             }
           });

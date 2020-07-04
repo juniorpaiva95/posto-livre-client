@@ -14,8 +14,8 @@
               <span>{{value.question}}</span>
               <img src="images/icons/other-icons/expand.svg" class="icon">
             </p>
-            <div class="pl-questions__answer">
-              <p>{{faq.answers[index].answer}}</p>
+            <div v-for="(avalue, aIndex) in value.answers.answers" :key="avalue.name" class="pl-questions__answer">
+              <p>{{avalue.answer}}</p>
             </div>
           </div>
         </div>
@@ -38,6 +38,8 @@ export default {
     mounted() {
         this.$store.dispatch('faq/fetchFaqs').then(faqs => {
             this.faq = faqs;
+            console.log("this is the faqs");
+            console.log(faqs);
         });
     },
   methods: {

@@ -18,7 +18,7 @@
 <script>
 export default {
   data: () => ({
-    title: "PUBLICAR LEILÃO",
+    title: "faça parte desse Leilão",
     paragraph1: "Tudo pronto para publicar seu leilão para análise.",
     paragraph2: "Confira se todos os dados estão corretos."
   })
