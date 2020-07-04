@@ -22,18 +22,18 @@
                         <pl-filters></pl-filters>
                 </div>
                 <div class="pl-table-mobile__item"
-                :class="`${item.categoryClass}`"
+                :class="`${item.fuel.slug}`"
                  v-for="(item, i) in data" :key="i">
                     <table class="pl-table-mobile__item--content">
                         <tr>
                             <td class="pl-table-mobile__item--type">
-                                <p>{{item.category}}</p>
+                                <p>{{item.fuel.name}}</p>
                                 <!-- <p>{{item.address}}</p> -->
                             </td>
                             <td class="pl-table-mobile__item--left">
                                 <p class="pl-table-mobile__item--title">Restam</p>
-                                <div class="pl-table-mobile__item--slot" v-html="item.time_left">
-                                    {{item.time_left}}
+                                <div class="pl-table-mobile__item--slot" v-html="item.date_finish">
+                                    {{item.date_finish}}
                                 </div>
                                 
                             </td>
@@ -46,7 +46,7 @@
                             </td>
                             <td class="pl-table-mobile__item--cod" >
                                 <p class="pl-table-mobile__item--title">Quantidade</p>
-                                <p>{{item.amount}}</p>
+                                <p>{{item.fuel_amount}}</p>
                                   
                                 <!-- <p class="pl-table-mobile__item--title">Frete</p>
                                 <p>{{item.freight}}</p> -->
@@ -65,15 +65,15 @@
                         <div class="pl-table-mobile__item--expanded">
                             <div class="expand">
                                 <div class="expand__address">
-                                    <p>{{item.address}}</p>
+                                    <p>{{item.pickup_location}}</p>
                                 </div>
                                 <div class="expand__code">
                                     <p class="pl-table-mobile__item--title">COD.</p>
-                                    <p>{{item.code}}</p>
+                                    <p>{{i}}</p>
                                 </div>
                                 <div class="expand__freight">
                                     <p class="pl-table-mobile__item--title">Frete</p>                                    
-                                    <p>{{item.freight}}</p> 
+                                    <p>{{item.freight_type}}</p> 
                                 </div>
                             </div>   
                             <pl-table-input :item="item"></pl-table-input>
@@ -182,17 +182,20 @@ export default {
             width: calc(100% - 4px);
         }
     }
-    .-gasolinaComum{
+    .-gasolina-comum{
         border-left: 5px solid $yellow!important;
     }
-    .-gasolinaAditivada{
+    .-gasolina-aditivada{
         border-left: 5px solid #01A39D!important;
     }
     .-etanol{
         border-left: 5px solid #8D99AE!important;
     }
-    .-diesel{
+    .-diesel-s10{
         border-left: 5px solid #000000!important;
+    }
+    .-diesel-s500{
+        border-left: 5px solid tomato!important;
     }
     .container{
         width: 100%;

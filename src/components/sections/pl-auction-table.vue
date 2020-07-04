@@ -3,7 +3,7 @@
         <div class="container">
             <table class="pl-bidTable__body col-12">
                 <tr>
-                    <td colspan="8" class="pl-bidTable__header">
+                    <td colspan="9" class="pl-bidTable__header">
                         <div class="pl-bidTable__showMore" @click="onToggle" id="filterBtn">
                             <img :src=link>
                             <p class="pl-bidTable__header--text">
@@ -40,6 +40,9 @@
                         <p>QUANTIDADE</p>
                     </td>    
                     <td>
+                        <p>DATA DE ENTREGA</p>
+                    </td>    
+                    <td>
                         <p>FRETE</p>
                     </td>    
                     <td>
@@ -52,33 +55,37 @@
                         <p>LANCES</p>
                     </td>
                 </tr>
-                <tr class="pl-bidTable__item" v-for="(item, i) in items" :key="i" :class="`${item.categoryClass}`">
+                <tr class="pl-bidTable__item" v-for="(item, i) in items" :key="i" :v-if="item.station.user_id == user.id" :class="`${item.fuel.slug}`">
                     <!--@click="showModal = true"-->
                     <td>
-                        {{item.code}}
+                        {{i}}
                     </td>
                     <td>
-                        {{ item.created_at }}
+                        {{ new Date(item.created_at).getDay()}}/{{ new Date(item.created_at).getMonth()}}/{{ new Date(item.created_at).getFullYear()}}
                     </td>
                     <td>
-                        {{item.category}}
+                        {{item.fuel.name}}
                     </td>
                     <td>
-                        {{item.amount}} L
+                        {{item.fuel_amount}} L
                     </td>
                     <td>
-                        {{item.freight}}
+                        {{ new Date(item.date_finish).getDay()}}/{{ new Date(item.date_finish).getMonth()}}/{{ new Date(item.date_finish).getFullYear()}}
+                    </td>
+
+                    <td>
+                        {{item.freight_type}}
                     </td>
                     <td>
-                        {{item.station.social_reason}}
+                        {{user.social_reason}}
                     </td>
                     <td>
                         <!-- use the modal component, pass in the prop -->
-                        {{item.withdraw}}
+                        {{item.pickup_location}}
                     </td>   
                     <td class="bid-div" colspan="2">
                         <div class="bid-item">
-                            <span class="bid-value">{{item.bid.formatted || item.bid}}</span>
+                            <span class="bid-value"><!-- {{item.bid.formatted || item.bid}} --></span>
                             <button class="bid-btn" type="button" @click="openModal(item)">...</button>
                         </div>    
                     </td>
@@ -111,7 +118,8 @@ export default {
         showModalBid: false,
         modalData: '',
         link : 'images/icons/other-icons/plus.svg',
-        items: []
+        items: [],
+        user: [],
     }),
     components: {
         'pl-modal': PLModal,
@@ -159,6 +167,10 @@ export default {
             await this.$store.commit('auction/setFilters', { status : 2, perPage: 30 });
             await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
+            this.user = await this.$store.getters['auth/getUser'];
+            console.log("testing to get the user inside my auctions");
+            console.log(this.user);
+
         }
 
         this.$store.watch(
@@ -201,17 +213,20 @@ export default {
             margin-right: 5px;
         }
     }
-    .-gasolinaComum{
+    .gasolina-comum{
         border-left: 5px solid $yellow!important;
     }
-    .-gasolinaAditivada{
+    .gasolina-aditivada{
         border-left: 5px solid #01A39D!important;
     }
-    .-etanol{
+    .etanol{
         border-left: 5px solid #8D99AE!important;
     }
-    .-diesel{
+    .diesel-s10{
         border-left: 5px solid #000000!important;
+    }
+    .diesel-s500{
+        border-left: 5px solid tomato!important;
     }
     &__header{
         width: 100%;

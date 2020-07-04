@@ -40,7 +40,21 @@ export default {
       let payload = Object.fromEntries(new FormData(form));
       /* appending data to form */
 
-      payload.station_id = this.$store;
+      let checkForPrice    = document.querySelector('#pl-createAuction__withdraw--checkbox');
+      if(!checkForPrice.checked){
+          Swal.fire({
+            position: "bottom-end",
+            type: "error",
+            title: "Você precisa concordar com o valor do litro do combustível",
+            showConfirmButton: false,
+            timer: 8500,
+            toast: true
+          });
+        return;
+
+      }
+
+
       
       this.$validator.validate().then(success => {
         setTimeout(() => {

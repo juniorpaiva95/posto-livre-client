@@ -22,16 +22,18 @@ export default {
             type: Object
         },
         date: {
-            type: Object
+            type: Date
         },
         isActive: {
             type: Number
         }
     },
     data() {
+        /* console.log("return of date");
+        console.log(moment(this.$props.date)); */
         return {
             // auctionProp: this.$props.auction,
-            timeLeft: moment(this.$props.date.date),
+            timeLeft: moment(this.$props.date - Date.now()),
             timeLeftHour: "",
             // timeLeftMinute: "",
             // timeLeftSeconds: "",
