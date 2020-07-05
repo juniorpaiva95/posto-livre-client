@@ -246,7 +246,7 @@ export default {
 
 		resetForgottenPassword({ state }, payload) {
 			return new Promise((resolve, reject) => {
-				apiService.post(`/api/v1/auth/reset-password`, {
+				apiService.post(`/api/v1/reset-password`, {
 					email: payload.email,
 					token: payload.token,
 					password: payload.password,

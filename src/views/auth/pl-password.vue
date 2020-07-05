@@ -78,7 +78,7 @@
                                 position: "bottom-end",
                                 showConfirmButton: false,
                                 type: "success",
-                                timer: 5000,
+                                timer: 3000,
                                 onClose: () => this.$router.push({ name : 'login' })
                             });
                         })
