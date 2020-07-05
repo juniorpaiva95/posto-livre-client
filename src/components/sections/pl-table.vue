@@ -74,7 +74,7 @@
                         {{item.freight_type}}
                     </td>
                     <td slot="time_left">
-                        <pl-countdown @handleOverdue="disableBtnDarLance(item)" :auction="item" :date='new Date(item.date_finish)' :isActive="item.status"></pl-countdown>
+                        <pl-countdown @handleOverdue="disableBtnDarLance(item)" :auction="item"></pl-countdown>
                     </td>
                     <td>
                         <!-- use the modal component, pass in the prop -->
