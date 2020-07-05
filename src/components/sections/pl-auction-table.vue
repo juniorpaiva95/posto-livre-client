@@ -77,7 +77,7 @@
                         {{item.freight_type}}
                     </td>
                     <td>
-                        {{user.social_reason}}
+                        {{item.station.user.social_reason}}
                     </td>
                     <td>
                         <!-- use the modal component, pass in the prop -->
@@ -160,8 +160,9 @@ export default {
         }
     },
     async created() {
-        this.$store.commit('auction/resetState');
+        await this.$store.commit('auction/resetState');
         if(window.location.pathname === '/bids'){
+            await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
         } else {
             this.user = await this.$store.getters['auth/getUser'];
@@ -169,8 +170,6 @@ export default {
             await this.$store.commit('auction/setFilters', { status : 2, limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
             await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
-            console.log("testing to get the user inside my auctions");
-            console.log(this.user);
 
         }
 

@@ -48,7 +48,7 @@ export default {
     async created() {
         await this.$store.commit('auction/setFilters', { status : 1 });
         this.$store.dispatch('auction/fetchAuctions').then(auctions => {
-                this.auctions = auctions;
+            this.auctions = auctions;
         });
     }
 }

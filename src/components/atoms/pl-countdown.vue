@@ -57,13 +57,12 @@ export default {
             return Math.abs(this.duration.seconds()) < 10 ? '0' + Math.abs(this.duration.seconds()): Math.abs(this.duration.seconds());
         },
         isOverdue() {
-            return this.duration.seconds() < 0;
+            return this.diffTime < 0;
         }
     },
     methods: {
         refreshCurrentTime() {
             this.currentTime = moment();
-            
         },
     }
 };

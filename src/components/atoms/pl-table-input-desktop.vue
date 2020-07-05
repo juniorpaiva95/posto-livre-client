@@ -4,7 +4,7 @@
             <div @click="decrement()">
                 <img src="images/icons/other-icons/to-down.svg" alt="">
             </div>
-            <input type="number" v-model="value" v-mask="'##.###'" @keypress="onKeydown" @blur="validateBlur"/>
+            <input type="number" v-model="value" v-mask="'#.###'" @keypress="onKeydown" @blur="validateBlur"/>
             <div @click="increment()">
                 <img src="images/icons/other-icons/to-up.svg" alt="">
             </div>
@@ -19,6 +19,7 @@
 <script>
 import PlBtn from '@/components/atoms/pl-btn';
 import PlBidModal from '@/components/sections/pl-bidModal';
+import Swal from 'sweetalert2';
 
 export default {
     components: {
@@ -44,12 +45,24 @@ export default {
         }
     },
     data: () => ({
-        value: 1.000,
+        value: 0.000,
         showModalBid: false,
     }),
     methods:{
         darLance() {
-            this.$store.dispatch('bid/createBid', {auction_id: this.item.id, value: this.value}).then(() => {
+            if(this.value < 0.001) {
+                Swal.fire({
+                            position: "bottom-end",
+                            type: "error",
+                            title:
+                                "O valor do lance deve ser maior que 0",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            toast: true
+                        });
+                return ;
+            }
+            this.$store.dispatch('bid/createBid', { auction_id: this.item.id, value: this.value }).then(() => {
                 this.showModalBid = true;
                 //Reload auctions
                 this.$store.dispatch('auction/fetchAuctions');

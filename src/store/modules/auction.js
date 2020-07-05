@@ -8,7 +8,7 @@ const INITIAL_STATE = () => {
     pagination: "",
     concat: false,
     filters: {
-      include: "station,fuel,bids",
+      include: "station,fuel,bids,bestBid",
       search: "",
       searchFields: "",
       status: 1,
@@ -166,21 +166,21 @@ export default {
       });
     },
 
-    fetchDistributorAuctionsWins({ state, commit }) {
-      return new Promise((resolve, reject) => {
-        commit('withoutPaginate');
-        let filterQueryString = filterToQuery(state.filters);
-        apiService.get('/api/v1/distributor/auctions/bids/wins?' + filterQueryString).then(response => {
-          if (response.status == 200) {
-            let { data, ...rest } = response.data;
-            commit("setAuctions", data);
-            commit("setPagination", rest);
-            return resolve(state.auctions);
-          }
+    // fetchDistributorAuctionsWins({ state, commit }) {
+    //   return new Promise((resolve, reject) => {
+    //     commit('withoutPaginate');
+    //     let filterQueryString = filterToQuery(state.filters);
+    //     apiService.get('/api/v1/distributor/auctions/bids/wins?' + filterQueryString).then(response => {
+    //       if (response.status == 200) {
+    //         let { data, ...rest } = response.data;
+    //         commit("setAuctions", data);
+    //         commit("setPagination", rest);
+    //         return resolve(state.auctions);
+    //       }
 
-          return reject(response);
-        });
-      });
-    },
+    //       return reject(response);
+    //     });
+    //   });
+    // },
   }
 };

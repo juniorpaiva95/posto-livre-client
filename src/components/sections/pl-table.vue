@@ -36,11 +36,7 @@
                     <td>
                         <p>QUANTIDADE
                         </p>
-                    </td>   
-                    <!-- <td>
-                        <p>MENOR
-                        <br>LANCE</p>
-                    </td>     -->
+                    </td>
                     <td>
                         <p>FRETE </p>
                     </td>    
@@ -52,7 +48,10 @@
                     </td>   
                     <td>
                         <p>MELHOR LANCE</p>
-                    </td>    
+                    </td>
+                    <!-- <td>
+                        <p>SEU LANCE</p>
+                    </td>  -->
                     <td>
                     </td>
                 </tr>
@@ -106,13 +105,15 @@
                         {{item.pickup_location}}
                     </td>   
                     <td>
-                        {{item.bid ||  'Sem lances'}}
+                        {{ item.bestBid.value ||  'Sem lances' }}
                     </td>
+                    <!-- <td>
+                    </td>   -->
                     <td class="pl-table__input">
                         <template v-if="distributor && !btnIsBlocked(item)">
                             <pl-table-input-desktop :item="item"/>
                         </template>
-                    </td>                          
+                    </td>                 
                 </tr>
             </table>
             <div class="col-12" v-if="btnShowMoreIsVisible">
@@ -145,7 +146,7 @@ export default {
 		...mapGetters({ user: 'auth/getUser', auctionPagination: 'auction/getPagination' }),
         distributor: function(){
             
-            return this.user && this.user.roles.name == "distributor";
+            return this.user && this.user.roles[0].name == "distributor";
         },
         btnShowMoreIsVisible: function() {
             // @TODO: Melhorar 
