@@ -4,6 +4,7 @@ import tokenService from '@/services/storage'
 import userService from '@/services/userStorage'
 import router from '@/router/router'
 import Swal from "sweetalert2";
+import { reject } from 'core-js/fn/promise'
 
 export default {
 	namespaced: true,
@@ -55,6 +56,28 @@ export default {
 		}
 	},
 	actions: {
+
+		getProfile() {
+			return new Promise((resolve, reject) => {
+				apiService.get(`/api/v1/users?search=id%3A${userService.getUser().id}&include=address,distributor.bank_account,station`)
+					.then(response => {
+						if(response.status === 200) {
+							return resolve(response.data.users[0])
+						}
+						
+					}, () => {
+
+						Swal.fire({
+							position: "bottom-end",
+							type: "warning",
+							title: "Sua sessão expirou, por favor realize o login novamente.",
+							showConfirmButton: false,
+							timer: 3000,
+							toast: true
+						});
+					})
+			})
+		},
 		fetchUser({ state, commit }) {
 			return new Promise((resolve, reject) => {
 				if (!tokenService.getToken()) {

@@ -18,7 +18,7 @@
 <!--                                <pl-navbell />-->
 <!--                            </router-link>-->
                             <router-link :to="{ name: 'station.feed' }">
-                                <pl-navItem>Pedidos</pl-navItem>
+                                <pl-navItem>Histórico</pl-navItem>
                             </router-link>
                             <router-link :to="{ name: 'station.auctions' }">
                                 <pl-navItem>Meus Leilões</pl-navItem>

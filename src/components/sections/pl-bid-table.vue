@@ -43,7 +43,7 @@
                         <p>FRETE</p>
                     </th>    
                     <th>
-                        <p>POSTO</p>
+                        <p>REVENDEDOR</p>
                     </th>    
                     <th>
                         <p>LOCAL</p>

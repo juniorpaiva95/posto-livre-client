@@ -75,7 +75,7 @@
             </div>
             <div class="pl-account__formItem pl-account__file col-6">
                 <label class="pl-account__label"
-                    >ESCOLHA 2 IMAGENS DO POSTO</label
+                    >ESCOLHA 2 IMAGENS DO REVENDEDOR</label
                 >
                 <input
                     type="file"
@@ -199,22 +199,24 @@ export default {
         "pl-btn": PlBtn,
     },
     async created() {
-        let user = await this.$store.getters['auth/getUser'];
-        // console.log(user);
-        this.user.email = user.email;
-        this.user.phone = user.phone;
-        this.user.social_reason = user.distributor ? user.distributor.social_reason : user.station.social_reason;
-        this.user.state_registration = user.distributor ? user.distributor.state_registration : user.station.state_registration;
-        this.user.cnpj = user.distributor ? user.distributor.cnpj : user.station.cnpj;
-        this.user.cep = user.adress.cep;
-        this.user.logradouro = user.adress.street;
-        this.user.bairro = user.adress.neighborhood;
-        this.user.cidade = user.adress.city;
-        this.user.numero = user.adress.number;
-        this.user.estado = user.adress.state;
-        this.user = { ...user, ...this.user };
+        this.loadUserLogged();
     },
     methods: {
+        async loadUserLogged() {
+            let user = await this.$store.dispatch('auth/getProfile');
+            this.user.email = user.email;
+            this.user.phone = user.phone_number;
+            this.user.social_reason = user.social_reason;
+            this.user.cnpj = user.cnpj;
+            this.user.state_registration = user.state_registration;
+            this.user.cep = user.address.cep;
+            this.user.estado = user.address.state;
+            this.user.cidade = user.address.city;
+            this.user.logradouro = user.address.street;
+            this.user.numero = user.address.number;
+            this.user.bairro = user.address.neighborhood;
+            this.user.complemento = user.address.complement;
+        },
       loadDataCep() {
           if (!this.user.cep) {
               return false;
@@ -285,50 +287,6 @@ export default {
                 type: "password"
             }
         },
-        address: {
-            cep: {
-                label: "CEP",
-                placeholder: "58041-000",
-                class: "",
-                type: "text"
-            },
-            endereco: {
-                label: "ENDEREÇO",
-                placeholder: "Av. Presidente Nilo Peçanha",
-                class: "",
-                type: "text"
-            },
-            bairro: {
-                label: "BAIRRO",
-                placeholder: "Expedicionários",
-                class: "",
-                type: "text"
-            },
-            cidade: {
-                label: "CIDADE",
-                placeholder: "João Pessoa",
-                class: "",
-                type: "text"
-            },
-            complemento: {
-                label: "COMPLEMENTO",
-                placeholder: "Apto. 15B",
-                class: "",
-                type: "text"
-            },
-            numero: {
-                label: "Número",
-                placeholder: "181",
-                class: "",
-                type: "text"
-            },
-            estado: {
-                label: "Estado",
-                placeholder: "Paraíba",
-                class: "",
-                type: "text"
-            }
-        }
     })
 };
 </script>

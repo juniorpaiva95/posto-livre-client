@@ -44,7 +44,7 @@
                 </p>
               </div>
               <div class="pl-modal__content--itens--freight">
-                <p class="pl-modal__content--itens--title">Posto</p>
+                <p class="pl-modal__content--itens--title">Revendedor</p>
                 <p>{{ item.station.user.social_reason }}</p>
               </div>
             </div>

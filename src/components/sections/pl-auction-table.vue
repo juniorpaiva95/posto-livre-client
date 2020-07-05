@@ -46,7 +46,7 @@
                         <p>FRETE</p>
                     </td>    
                     <td>
-                        <p>POSTO</p>
+                        <p>REVENDEDOR</p>
                     </td>    
                     <td>
                         <p>LOCAL</p>
@@ -61,7 +61,7 @@
                         {{i}}
                     </td>
                     <td>
-                        {{ new Date(item.created_at).getDay()}}/{{ new Date(item.created_at).getMonth()}}/{{ new Date(item.created_at).getFullYear()}}
+                        {{ item.created_at | datetime }}
                     </td>
                     <td>
                         {{item.fuel.name}}
@@ -70,7 +70,7 @@
                         {{item.fuel_amount}} L
                     </td>
                     <td>
-                        {{ new Date(item.date_finish).getDay()}}/{{ new Date(item.date_finish).getMonth()}}/{{ new Date(item.date_finish).getFullYear()}}
+                        {{ item.date_finish | datetime }}
                     </td>
 
                     <td>
@@ -161,7 +161,7 @@ export default {
     },
     async created() {
         await this.$store.commit('auction/resetState');
-        if(window.location.pathname === '/bids'){
+        if(window.location.pathname === '/bids') {
             await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
         } else {

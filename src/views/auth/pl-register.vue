@@ -279,7 +279,7 @@
                             class="pl-register__formItem pl-register__file col-12"
                         >
                             <label class="pl-register__label"
-                            >F DO POSTO</label
+                            >IMAGENS DO REVENDEDOR</label
                             >
                             <input
                                 type="file"
@@ -381,7 +381,7 @@
                 },
                 showModal: false,
                 options: [
-                    {value: "station", text: "Posto"},
+                    {value: "station", text: "Revendedor"},
                     {value: "distributor", text: "Distribuidor"}
                 ]
             };
