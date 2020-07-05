@@ -1,0 +1,18 @@
+version: '3'
+services:
+
+  postolivre-app:
+    container_name: postolivre-app
+    build: .
+    restart: always
+    # command: npm run start
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/app
+    networks:
+      - postolivre-app-network
+
+networks:
+  postolivre-app-network:
+    driver: bridge
