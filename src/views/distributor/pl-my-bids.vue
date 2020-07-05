@@ -27,7 +27,6 @@ export default {
     }),
     async created() {
         let user = await this.$store.getters['auth/getUser'];
-        // console.log("USUARIO", user);
         await this.$store.commit('auction/setFilters', { search: `bids.distributor_id:${user.distributor.id}`, searchFields: `bids.distributor_id:=` })
         await this.$store.dispatch('auction/fetchAuctions').then(auctions => {
             this.auctions = auctions;

@@ -85,8 +85,9 @@
                     </td>   
                     <td class="bid-div" colspan="2">
                         <div class="bid-item">
-                            <span class="bid-value"><!-- {{item.bid.formatted || item.bid}} --></span>
-                            <button class="bid-btn" type="button" @click="openModal(item)">...</button>
+                            <!-- <span class="bid-value">{{item.bid.formatted || item.bid}}</span> -->
+                            <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
+                            <button class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
                         </div>    
                     </td>
                 </tr>
@@ -110,6 +111,7 @@ import PLModal from '@/components/sections/pl-modal';
 import PLBtn from '@/components/atoms/pl-btn';
 import PLFilters from '@/components/sections/pl-filters';
 import { mapGetters } from 'vuex';
+import Swal from 'sweetalert2';
 
 export default {
     data: () => ({
@@ -151,6 +153,24 @@ export default {
             this.modalData = item;
             this.showModal = true;
         },
+        cancelarPedido(item) {
+            let self = this;
+            Swal.fire({
+                title: 'Deseja realmente cancelar ?',
+                text: "Esta ação não poderá ser revertida.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#FFB119',
+                // cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim',
+                cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.value) {
+                        self.$store.dispatch('auction/deleteAuction', { auction_id: item.id })
+                    }
+                })
+            
+        },
         showModalBidF(){
             this.showModalBid = true;
         },
@@ -184,6 +204,9 @@ export default {
 }
 </script>
 <style lang="scss">
+.swal2-confirm, .swal2-cancel, #swal2-content, .swal2-title {
+    font-family: 'barlow', sans-serif;
+}
 .pl-bidTable{
     font-family: 'Roboto', sans-serif;
     margin-bottom: 50px;
@@ -199,7 +222,7 @@ export default {
         font-family: $roboto-family;
         .bid-btn{
             display: inline-block;
-            width: 20px;
+            width: 30px;
             padding: 0px;
             text-align: center;
             border: 2px solid grey!important;

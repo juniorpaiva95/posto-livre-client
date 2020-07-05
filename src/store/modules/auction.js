@@ -129,6 +129,28 @@ export default {
         );
       });
     },
+    deleteAuction: async ({ dispatch }, { auction_id }) => {
+      
+      
+      await apiService.delete(`api/v1/auctions/${auction_id}`).then(response => {
+        Swal.fire({
+          position: "bottom-end",
+          type: "success",
+          title: "Pedido cancelado com sucesso!",
+          timer: 3000,
+          toast: true
+        });
+        dispatch('fetchAuctions');
+      }).catch(error => {
+        Swal.fire({
+          position: "bottom-end",
+          type: "error",
+          title: error.message,
+          timer: 3000,
+          toast: true
+        });
+      })
+    },
     fetchAuctions: async ({ state, commit, rootState }, payload) => {
       let concat = rootState.auction.concat;
       let fromOriginFilters = payload ? payload.hasOwnProperty('fromFilters') : false;
