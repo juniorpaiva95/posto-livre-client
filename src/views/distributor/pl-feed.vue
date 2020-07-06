@@ -38,7 +38,7 @@ export default {
     }),
     methods: {
         isMobile() {
-            if(window.innerWidth <= 1000) {
+            if(window.outerWidth <= 1000) {
                 return true
             } else {
                 return false
