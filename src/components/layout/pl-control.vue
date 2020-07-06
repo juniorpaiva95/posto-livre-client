@@ -9,6 +9,8 @@
     </button>
     <div class="pl-header-station__profile--nav--expanded dropdown-content">
       <ul>
+
+
         <router-link to="/minhaconta">
           <li>
             <span>
@@ -63,6 +65,31 @@
             </span>Sair
           </li>
         </a>
+        <div v-if="station && isMobile()">
+          <hr>
+          <router-link :to="{ name: 'station.feed' }">
+            <li>
+              Histórico
+            </li>
+          </router-link>
+          <router-link :to="{ name: 'station.auctions' }">
+            <li>
+              Meus Leilões
+            </li>
+
+          </router-link>
+        </div>
+        <div v-if="distributor && isMobile()">
+          <hr>
+          <router-link :to="{ name: 'distributor.feed' }">
+            <li>Leilões</li>
+          </router-link>
+          <router-link :to="{ name: 'distributor.bids' }">
+            <li>Meus lances</li>
+          </router-link>
+
+        </div>
+
       </ul>
     </div>
   </div>
@@ -73,6 +100,16 @@
 import { mapGetters } from "vuex";
 
 export default {
+  props: {
+      distributor: {
+          type: Boolean,
+          default: () => (false),
+      },
+      station: {
+          type: Boolean,
+          default: () => (false),
+      },
+  },
   computed: {
     ...mapGetters({
       user: "auth/getUser"
@@ -81,7 +118,15 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch("auth/logout");
+    },
+    isMobile() {
+      if(window.innerWidth <= 1000) {
+        return true
+      } else {
+        return false
+      }
     }
+
   }
 };
 </script>

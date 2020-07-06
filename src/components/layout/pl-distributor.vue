@@ -8,7 +8,7 @@
                 </div>
                 <div class="pl-header-distributor__content">
                     <div class="box">
-                        <div class="pl-header-distributor__items">
+                        <div v-if="!isMobile()" class="pl-header-distributor__items">
 <!--                            <router-link :to="{name: 'notificacoes'}">-->
 <!--                                <pl-navbell/>-->
 <!--                            </router-link>-->
@@ -19,7 +19,7 @@
                                 <pl-navItem>Meus lances</pl-navItem>
                             </router-link>
                         </div>
-                        <pl-control />
+                        <pl-control :distributor=true />
                         <!-- <div>
                             <img src="images/section-images/Avatar.png" alt="">
                         </div>   -->
@@ -44,6 +44,15 @@ export default {
         "pl-btn": PlBtn,
         "pl-navbell": PlNavBell,
         "pl-control": PlControl
+    },
+    methods:{
+        isMobile() {
+            if(window.innerWidth <= 1000) {
+                return true
+            } else {
+                return false
+            }
+        }
     }
 }
 </script>

@@ -13,7 +13,7 @@
                             <pl-btn class='pl-header-station__start' text="Criar Leilão" type="standard"></pl-btn>
                         </router-link>
 
-                        <div class="pl-header-station__items">
+                        <div v-if="!isMobile()" class="pl-header-station__items">
 <!--                            <router-link :to="{ name: 'notificacoes'}">-->
 <!--                                <pl-navbell />-->
 <!--                            </router-link>-->
@@ -24,7 +24,7 @@
                                 <pl-navItem>Meus Leilões</pl-navItem>
                             </router-link>
                         </div>
-                        <pl-control />
+                        <pl-control :station=true />
                         <!-- <div>
                             <img src="images/section-images/Avatar.png" alt="">
                         </div>   -->
@@ -49,7 +49,17 @@ export default {
         "pl-btn": PlBtn,
         "pl-navbell": PlNavBell,
         "pl-control": PlControl
+    },
+    methods:{
+        isMobile() {
+            if(window.innerWidth <= 1000) {
+                return true
+            } else {
+                return false
+            }
+        }
     }
+
 }
 </script>
 
