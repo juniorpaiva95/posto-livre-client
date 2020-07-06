@@ -12,7 +12,6 @@ const INITIAL_STATE = () => {
       search: "",
       searchFields: "",
       status: 1,
-      categoria: [],
       cidade: "",
       estado: "",
       relevancia: "",
@@ -167,9 +166,11 @@ export default {
       } */
       //* checking filters
       let filterQueryString = filterToQuery(state.filters);
+      if(state.filters)
 
       console.log("filterQueryString");
       console.log(filterQueryString);
+      
       await apiService.get(`${url}?${filterQueryString}`).then(response => {
         if (response.status == 200) {
           /* let { data, ...rest } = response.data; */

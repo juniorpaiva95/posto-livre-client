@@ -129,7 +129,7 @@ export default {
         filters: {
             status: 1,
             page: 1,
-            categoria: [],
+            search: [],
             cidade: "",
             estado: "",
             relevancia: ""
@@ -142,25 +142,25 @@ export default {
             let paramFormatted = null;
             switch (param) {
                 case "etanol":
-                    paramFormatted = 3;
+                    paramFormatted = 'fuel.name:etanol';
                     break;
                 case "gasolina":
-                    paramFormatted = 1;
+                    paramFormatted = 'fuel.name:gasolina comum';
                     break;
                 case "gasolinaAdtv":
-                    paramFormatted = 2;
+                    paramFormatted = 'fuel.name:gasolina adiivada';
                     break;
                 case "diesels10":
-                    paramFormatted = 4;
+                    paramFormatted = 'fuel.name:diesel s10';
                     break;
                 case "diesels500":
-                    paramFormatted = 5;
+                    paramFormatted = 'fuel.name:diesel s500';
                     break;
             }
-            if (!this.filters.categoria.includes(paramFormatted)) {
-                this.filters.categoria.push(paramFormatted);
+            if (!this.filters.search.includes(paramFormatted)) {
+                this.filters.search.push(paramFormatted);
             } else {
-                this.filters.categoria = this.filters.categoria.filter(
+                this.filters.search = this.filters.search.filter(
                     categoria => categoria !== paramFormatted
                 );
             }

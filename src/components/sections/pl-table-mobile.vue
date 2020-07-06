@@ -23,7 +23,7 @@
                 </div>
                 <div class="pl-table-mobile__item"
                 :class="`${item.fuel.slug}`"
-                 v-for="(item, i) in data" :key="i">
+                 v-for="(item, i) in items" :key="i">
                     <table class="pl-table-mobile__item--content">
                         <tr>
                             <td class="pl-table-mobile__item--type">
@@ -76,7 +76,9 @@
                                     <p>{{item.freight_type}}</p> 
                                 </div>
                             </div>   
-                            <pl-table-input :item="item"></pl-table-input>
+                            <template v-if="distributor">
+                                <pl-table-input :item="item"></pl-table-input>
+                            </template>
                         </div>
                 </div>
             </div>
@@ -96,6 +98,7 @@ import PLInput from '@/components/atoms/pl-input';
 import PLTableInput from '@/components/atoms/pl-table-input';
 import PLFilters from '@/components/sections/pl-filters';
 import PLBtn from '@/components/atoms/pl-btn';
+import { mapGetters } from 'vuex';
 
 export default {
     props: {
@@ -110,8 +113,18 @@ export default {
         'pl-btn': PLBtn,
         
     },
+    computed: {
+		...mapGetters({ user: 'auth/getUser', auctionPagination: 'auction/getPagination' }),
+        distributor: function(){
+            
+            return this.user && this.user.roles[0].name == "distributor";
+        },
+    },
+
     data: () =>  ({
-       link : 'images/icons/other-icons/plus.svg',
+        link : 'images/icons/other-icons/plus.svg',
+        items: [],
+
     }),
     methods: {
         onToggle(event){
@@ -139,7 +152,18 @@ export default {
                 this.link = 'images/icons/other-icons/plus.svg';
             }
         },
+    },
+    created() {
+        this.$store.commit('auction/resetState');
+        this.items = this.$store.getters["auction/getAuctions"];
+        this.$store.watch(
+            (state, getters) => getters["auction/getAuctions"],
+            (newValue, oldValue) => {
+                this.items = newValue;
+            },
+        );
     }
+
 }
 
 </script>
@@ -149,6 +173,9 @@ export default {
 }
 .plus-active{
     color: $yellow!important;
+}
+.pl-table__search--content{
+    display: flex !important;
 }
 .pl-table-mobile{
     &__button{
@@ -230,15 +257,15 @@ export default {
     }
     &__search{
         line-height: 100%;
-        display: flex;
+        display: flex !important;
         align-items: center;
         width: 75%;
         height: 100%;
         padding: 10px;
         &--content{
+            display: flex !important;
             width: 100%;
             border: 1px solid rgba(white, 0.3);
-            display: flex;
             background-color: rgba(white, 0.3);
             img{
                 padding-right: 10px;

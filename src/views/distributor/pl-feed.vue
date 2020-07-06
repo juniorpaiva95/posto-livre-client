@@ -10,7 +10,7 @@
             </pl-table>
         </div>
         <div v-else>
-            <pl-table-mobile :data='auctions'>
+            <pl-table-mobile class="container" :data='auctions'>
             </pl-table-mobile> 
         </div>
         <pl-questions title="Perguntas frequentes"></pl-questions>
