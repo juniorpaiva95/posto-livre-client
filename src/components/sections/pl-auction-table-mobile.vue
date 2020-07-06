@@ -21,39 +21,58 @@
                 <div class="pl-table-mobile__filters--component" id="filters">
                         <pl-filters></pl-filters>
                 </div>
+                <!-- MOBILE -->
                 <div class="pl-table-mobile__item"
                 :class="`${item.fuel.slug}`"
                  v-for="(item, i) in items" :key="i">
                     <table class="pl-table-mobile__item--content">
                         <tr>
-                            <td class="pl-table-mobile__item--type">
-                                <p>{{item.fuel.name}}</p>
-                                <!-- <p>{{item.address}}</p> -->
-                            </td>
                             <td class="pl-table-mobile__item--left">
-                                <p class="pl-table-mobile__item--title">Restam</p>
-                                <div class="pl-table-mobile__item--slot" v-html="item.date_finish">
-                                    {{item.date_finish}}
+                                <p class="pl-table-mobile__item--title">Data</p>
+                                <div class="pl-table-mobile__item--slot" v-html="formatDate(item.date_start)">
+                                    {{new Date(item.date_start).getDay()}}
+                                </div>
+                                <p class="pl-table-mobile__item--title">COD</p>
+                                <div class="pl-table-mobile__item--slot" v-html="item.id">
+                                    {{item.id}}
                                 </div>
                                 
                             </td>
-                            <td class="pl-table-mobile__item--props" >
-                                <p class="pl-table-mobile__item--title">Menor Lance</p>
-                                <p>{{item.low_bid}}</p>
-                                
-                                <!-- <p class="pl-table-mobile__item--title">Menor Lance</p>
-                                <p>{{item.low_bid}}</p> -->
-                            </td>
-                            <td class="pl-table-mobile__item--cod" >
+                            <td class="pl-table-mobile__item--left">
+                                <p class="pl-table-mobile__item--title">Posto</p>
+                                <div class="pl-table-mobile__item--slot" v-html="(item.station.social_reason)? item.station.social_reason : '-'">
+                                    {{item.station.social_reason}}
+                                </div>
                                 <p class="pl-table-mobile__item--title">Quantidade</p>
-                                <p>{{item.fuel_amount}}</p>
-                                  
-                                <!-- <p class="pl-table-mobile__item--title">Frete</p>
-                                <p>{{item.freight}}</p> -->
+                                <div class="pl-table-mobile__item--slot" v-html="item.fuel_amount + ' L'">
+                                    {{item.fuel_amount}} L
+                                </div>
+                                
+                            </td>
+                            <td class="pl-table-mobile__item--left">
+                                <p class="pl-table-mobile__item--title">Melhor lance</p>
+                                <div class="pl-table-mobile__item--slot" v-html="(item.low_bid)? item.low_bid : '-'">
+                                    {{item.low_bid}}
+                                </div>
+                                <p class="pl-table-mobile__item--title">frete</p>
+                                <div class="pl-table-mobile__item--slot" v-html="item.freight_type">
+                                    {{item.freight_type}}
+                                </div>
+                                
+                            </td>
+
+                            <td class="pl-table-mobile__item--type">
+                                <p class="pb-10">{{item.fuel.name}}</p>
+                                <p>{{item.pickup_location}}</p>
                             </td>
                             <td class="pl-table-mobile__item--bid">
-                                <p class="pl-table-mobile__item--title">Seu lance</p>
-                                <p v-html="item.bid">{{item.bid}}</p>
+                                <!-- <p class="pl-table-mobile__item--title">Seu lance</p> -->
+                                <!-- <p v-html="item.bid">{{item.bid}}</p> -->
+                                <div class="bid-item">
+                                    <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
+                                    <!-- <button class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button> -->
+                                </div>    
+
                             </td>
                             <td class="pl-table-mobile__item--ico">
                                 <button class="pl-table-mobile__expand"  @click="onToggle">
@@ -62,71 +81,123 @@
                             </td>
                         </tr>
                     </table>
-                        <div class="pl-table-mobile__item--expanded">
-                            <div class="expand">
-                                <div class="expand__address">
-                                    <p>{{item.pickup_location}}</p>
-                                </div>
-                                <div class="expand__code">
-                                    <p class="pl-table-mobile__item--title">COD.</p>
-                                    <p>{{i}}</p>
-                                </div>
-                                <div class="expand__freight">
-                                    <p class="pl-table-mobile__item--title">Frete</p>                                    
-                                    <p>{{item.freight_type}}</p> 
-                                </div>
-                            </div>   
-                            <template v-if="distributor">
-                                <pl-table-input :item="item"></pl-table-input>
-                            </template>
-                        </div>
+                        
+                </div>
+
+                <!-- LEGACY -->
+                <!-- <tr class="pl-bidTable__labels" >
+                    <td class="pl-bidTable__cod">
+                        <p>#COD.</p>
+                    </td>    
+                    <td>
+                        <p>DATA</p>
+                    </td>    
+                    <td>
+                        <p>COMBUSTÍVEL</p>
+                    </td>   
+                    <td>
+                        <p>QUANTIDADE</p>
+                    </td>    
+                    <td>
+                        <p>DATA DE ENTREGA</p>
+                    </td>    
+                    <td>
+                        <p>FRETE</p>
+                    </td>    
+                    <td>
+                        <p>REVENDEDOR</p>
+                    </td>    
+                    <td>
+                        <p>LOCAL</p>
+                    </td>   
+                    <td>
+                        <p>LANCES</p>
+                    </td>
+                </tr>
+                <tr class="pl-bidTable__item" v-for="(item, i) in items" :key="i" :v-if="item.station.user_id == user.id" :class="`${item.fuel.slug}`">
+                    <td>
+                        {{i}}
+                    </td>
+                    <td>
+                        {{ item.created_at | datetime }}
+                    </td>
+                    <td>
+                        {{item.fuel.name}}
+                    </td>
+                    <td>
+                        {{item.fuel_amount}} L
+                    </td>
+                    <td>
+                        {{ item.date_finish | datetime }}
+                    </td>
+
+                    <td>
+                        {{item.freight_type}}
+                    </td>
+                    <td>
+                        {{item.station.user.social_reason}}
+                    </td>
+                    <td>
+                        {{item.pickup_location}}
+                    </td>   
+                    <td class="bid-div" colspan="2">
+                        <div class="bid-item">
+                            <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
+                            <button class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
+                        </div>    
+                    </td>
+                </tr> -->
+            </div>
+            <div class="col-12" v-if="btnShowMoreIsVisible">
+                <div class="pl-bidTable__button">
+                    <button class="pl-btn pl-btn--standard" @click="handleShowMore">Mostrar Mais</button>
                 </div>
             </div>
-            <div class="col-12">
-                <div class="pl-table-mobile__button">
-                    <pl-btn type="standard" text="Mostrar Mais">
-                    </pl-btn>
-                </div>
-            </div>
+            <pl-modal
+                :item='modalData'
+                v-if="showModal" @close="showModal = false">
+            </pl-modal>
         </div>
-    </section>    
+    </section> 
 </template>
+
 <script>
-/* eslint-disable */ 
-// due to annoying eslint pseudo errors
 import PLInput from '@/components/atoms/pl-input';
-import PLTableInput from '@/components/atoms/pl-table-input';
-import PLFilters from '@/components/sections/pl-filters';
+import PLModal from '@/components/sections/pl-modal';
 import PLBtn from '@/components/atoms/pl-btn';
+import PLFilters from '@/components/sections/pl-filters';
 import { mapGetters } from 'vuex';
+import Swal from 'sweetalert2';
+import moment from 'moment'
 
 export default {
-    props: {
-        data: {
-            type: Array,
-            default: () => ([]),
-        }
-    }, components: {
-        'pl-input': PLInput,
-        'pl-table-input': PLTableInput,
-        'pl-filters': PLFilters,
-        'pl-btn': PLBtn,
-        
-    },
-    computed: {
-		...mapGetters({ user: 'auth/getUser', auctionPagination: 'auction/getPagination' }),
-        distributor: function(){
-            
-            return this.user && this.user.roles[0].name == "distributor";
-        },
-    },
-
-    data: () =>  ({
+    data: () => ({
+        value: null,
+        showModal: false,
+        showModalBid: false,
+        modalData: '',
         link : 'images/icons/other-icons/plus.svg',
         items: [],
-
+        user: [],
     }),
+    components: {
+        'pl-modal': PLModal,
+        'pl-btn': PLBtn,
+        'pl-input': PLInput,
+        'pl-filters': PLFilters,
+    },
+    computed: {
+        ...mapGetters({ auctionPagination: 'auction/getPagination' }),
+        btnShowMoreIsVisible: function() {
+            // @TODO: Melhorar
+            return this.auctionPagination.hasOwnProperty('links') && !!this.auctionPagination.links.next
+        },
+
+    },
     methods: {
+        formatDate(date){
+            return moment(date, 'YYYY-MM-DD').format('DD/MM/YYYY');
+        },
         onToggle(event){
             var item = event.target.closest('.pl-table-mobile__item');
             // eslint-disable-next-line
@@ -152,30 +223,84 @@ export default {
                 this.link = 'images/icons/other-icons/plus.svg';
             }
         },
+        openModal(item) {
+            this.modalData = item;
+            this.showModal = true;
+        },
+        cancelarPedido(item) {
+            let self = this;
+            Swal.fire({
+                title: 'Deseja realmente cancelar ?',
+                text: "Esta ação não poderá ser revertida.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#FFB119',
+                // cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim',
+                cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.value) {
+                        self.$store.dispatch('auction/deleteAuction', { auction_id: item.id })
+                    }
+                })
+            
+        },
+        showModalBidF(){
+            this.showModalBid = true;
+        },
+        handleShowMore() {
+            this.$store.commit('auction/setConcat', true);
+            this.$store.dispatch('auction/fetchAuctions');
+        }
     },
-    created() {
-        this.$store.commit('auction/resetState');
-        this.items = this.$store.getters["auction/getAuctions"];
+    async created() {
+        await this.$store.commit('auction/resetState');
+        if(window.location.pathname === '/bids') {
+            await this.$store.dispatch('auction/fetchAuctions');
+            this.items = await this.$store.getters['auction/getAuctions'];
+        } else {
+            this.user = await this.$store.getters['auth/getUser'];
+            
+            await this.$store.commit('auction/setFilters', { status : 2, limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
+            await this.$store.dispatch('auction/fetchAuctions');
+            this.items = await this.$store.getters['auction/getAuctions'];
+        }
+
         this.$store.watch(
             (state, getters) => getters["auction/getAuctions"],
-            (newValue, oldValue) => {
+            (newValue) => {
                 this.items = newValue;
             },
         );
     }
 
 }
-
 </script>
 <style lang="scss">
 .flip{
   transform: rotate(-180deg);
+}
+.bid-btn{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    margin-right: 10px;
+    text-align: center;
+    border: 2px solid grey!important;
+    background-color: #fff;
+    border-radius: 2px!important;
+    cursor: pointer;
+    outline: none;
 }
 .plus-active{
     color: $yellow!important;
 }
 .pl-table__search--content{
     display: flex !important;
+}
+.pb-10{
+    padding-bottom: 10px;
 }
 .pl-table-mobile{
     &__button{
