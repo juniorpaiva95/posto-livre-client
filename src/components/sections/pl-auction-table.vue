@@ -190,7 +190,6 @@ export default {
             await this.$store.commit('auction/setFilters', { status : 2, limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
             await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
-
         }
 
         this.$store.watch(
@@ -224,6 +223,7 @@ export default {
             display: inline-block;
             width: 30px;
             padding: 0px;
+            margin-right: 10px;
             text-align: center;
             border: 2px solid grey!important;
             background-color: #fff;

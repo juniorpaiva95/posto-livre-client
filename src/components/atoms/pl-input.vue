@@ -32,7 +32,7 @@ export default {
     methods: {
         submitFilter() {
             this.$store.commit('auction/setConcat', false);
-            this.$store.commit('auction/setFilters', { search: this.search, page: 1 });
+            this.$store.commit('auction/setFilters', { search: "fuel.name:" + this.search, page: 1 });
             this.$store.dispatch(this.getDispatchName());
         },
         getDispatchName() {

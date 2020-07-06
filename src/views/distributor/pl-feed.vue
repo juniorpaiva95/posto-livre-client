@@ -10,7 +10,7 @@
             </pl-table>
         </div>
         <div v-else>
-            <pl-table-mobile :data='auctions'>
+            <pl-table-mobile class="container" :data='auctions'>
             </pl-table-mobile> 
         </div>
         <pl-questions title="Perguntas frequentes"></pl-questions>
@@ -38,7 +38,7 @@ export default {
     }),
     methods: {
         isMobile() {
-            if(window.outerWidth <= 1000) {
+            if(window.innerWidth <= 1000) {
                 return true
             } else {
                 return false

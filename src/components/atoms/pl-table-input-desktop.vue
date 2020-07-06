@@ -62,6 +62,7 @@ export default {
                         });
                 return ;
             }
+
             this.$store.dispatch('bid/createBid', { auction_id: this.item.id, value: this.value }).then(() => {
                 this.showModalBid = true;
                 //Reload auctions

@@ -20,9 +20,9 @@
                             </router-link>
                         </div>
                         <pl-control />
-                        <div>
+                        <!-- <div>
                             <img src="images/section-images/Avatar.png" alt="">
-                        </div>  
+                        </div>   -->
                     </div>
                    
                 </div>
