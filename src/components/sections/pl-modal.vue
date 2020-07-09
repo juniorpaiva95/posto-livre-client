@@ -58,6 +58,22 @@
                 <p>{{ item.pickup_location }}</p>
               </div>
             </div>
+            <div class="pl-modal__content--itens--data">
+              <div class="pl-modal__content--itens--code">
+                <p class="pl-modal__content--itens--title mb-10">COMPROVANTE DE PAGAMENTO</p>
+                <!-- <p>{{ item.fuel_amount }}L</p> -->
+                <input 
+                  type="file" 
+                  @change="carregandoComprovante"
+                  id="file" 
+                  accept=".pdf">
+                <label for="file" id="comprovante-pagamento-btn">Enviar Agora</label>
+              </div>
+              <div class="pl-modal__content--itens--freight">
+                <p class="pl-modal__content--itens--title">FRETE</p>
+                <p class="pl-modal__content--itens--text">{{ item.freight_type }}</p>
+              </div>
+            </div>
           </div>
           <div class="pl-modal__content--bids">
             <div
@@ -109,11 +125,35 @@ export default {
   methods: {
     close: function() {
       return this.$emit("close");
+    },
+    carregandoComprovante(e){
+      /* console.log(e); */
+      this.$store.dispatch('auction/sendPaymentVoucher', { auction_id: this.item.id })
+
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+input[type="file"]{
+  display: none;
+}
+#comprovante-pagamento-btn{
+  font-family: $roboto-family;
+  color: #333333;
+  padding: 7px;
+  border: 1px solid #8D99AE;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 14px;
+  /* identical to box height */
+
+  letter-spacing: 0.03em;
+  margin-top: 20px;
+}
+.mb-10{
+  margin-bottom: 10px !important;
+}
 .pl-modal {
   &__backdrop {
     position: fixed;
@@ -130,7 +170,7 @@ export default {
   }
   &__body {
     width: 600px;
-    height: 500px;
+    height: 600px;
     background-color: #ffffff;
     text-align: left;
     border: 1px solid black;
@@ -189,7 +229,7 @@ export default {
       height: 100%;
       border-right: 1px solid rgba(0, 0, 0, 0.08);
       &--data {
-        height: 25%;
+        height: 20%;
         border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         padding: 0px 0px 0px 40px;
         display: flex;

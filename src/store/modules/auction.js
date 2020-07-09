@@ -5,10 +5,11 @@ import { filterToQuery } from "../../utils/api/util";
 const INITIAL_STATE = () => {
   return {
     auctions: [],
+    ports: [],
     pagination: "",
     concat: false,
     filters: {
-      include: "station,fuel,bids,bestBid",
+      include: "station,fuel",/* bids,bestBid */
       search: "",
       searchFields: "",
       status: 1,
@@ -27,6 +28,9 @@ export default {
   getters: {
     getAuctions(state) {
       return state.auctions;
+    },
+    getPorts(state) {
+      return state.ports;
     },
     getPagination(state) {
       return state.pagination;
@@ -47,6 +51,9 @@ export default {
     },
     setAuctions(state, auctions) {
       state.auctions = auctions;
+    },
+    setports(state, ports) {
+      state.ports = ports;
     },
     setConcat(state, concat) {
       state.concat = concat;
@@ -129,13 +136,34 @@ export default {
       });
     },
     deleteAuction: async ({ dispatch }, { auction_id }) => {
-      
-      
       await apiService.delete(`api/v1/auctions/${auction_id}`).then(response => {
         Swal.fire({
           position: "bottom-end",
           type: "success",
           title: "Pedido cancelado com sucesso!",
+          timer: 3000,
+          toast: true
+        });
+        dispatch('fetchAuctions');
+      }).catch(error => {
+        Swal.fire({
+          position: "bottom-end",
+          type: "error",
+          title: error.message,
+          timer: 3000,
+          toast: true
+        });
+      })
+    },
+    sendPaymentVoucher: async ({ dispatch }, { auction_id }, payload) => {
+      /* console.log("sending payment being called to");
+      console.log(auction_id);
+      return; */
+      await apiService.post(`api/v1/auctions/${auction_id}/upload`, payload).then(response => {
+        Swal.fire({
+          position: "bottom-end",
+          type: "success",
+          title: "Comprovante enviado com sucesso!",
           timer: 3000,
           toast: true
         });
@@ -159,12 +187,6 @@ export default {
       let user = await rootState.auth.user;
       let url = "/api/v1/auctions";
 
-      /* if (user.roles.name[0] === "distributor") {
-        url = "/api/v1/distributor/auctions";
-      } else if (user.roles[0].name === "gas_station") {
-        url = "/api/v1/station/auctions";
-      } */
-      //* checking filters
       let filterQueryString = filterToQuery(state.filters);
       if(state.filters)
 
@@ -173,7 +195,6 @@ export default {
       
       await apiService.get(`${url}?${filterQueryString}`).then(response => {
         if (response.status == 200) {
-          /* let { data, ...rest } = response.data; */
           let data = response.data.auctions;
           console.log("this is the return of auctions.js => fetchAuctions");
           console.log(concat);
@@ -182,8 +203,21 @@ export default {
           } else {
             commit("setAuctions", data);
           }
-          /* commit("setPagination", rest); */
-          console.log(state.auctions);
+
+        }
+      });
+    },
+    fetchPorts: async ({ state, commit, rootState }) => {
+      let user = await rootState.auth.user;
+      let url = "/api/v1/ports";
+      await apiService.get(`${url}`).then(response => {
+        if (response.status == 200) {
+          let data = response.data.ports;
+          console.log(data);
+          state.ports = data;
+          /* commit("auction/setPorts", data, { rootState: true }); */
+          /* this.$store.dispatch('auction/setPorts', data) */
+
 
         }
       });

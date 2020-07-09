@@ -7,7 +7,7 @@
         <pl-quantity></pl-quantity>
         <pl-time></pl-time>
         <pl-freight></pl-freight>
-        <pl-withdraw></pl-withdraw>
+        <pl-withdraw :ports="ports"></pl-withdraw>
         <pl-publish></pl-publish>
       </div>
     </form>
@@ -25,6 +25,9 @@ import PlPublish from "@/components/sections/auction/pl-publish"
 import Swal from "sweetalert2"
 
 export default {
+  data: () => ({
+    ports: [],
+  }),
   components: {
     "pl-top": PlTop,
     "pl-fuel": PlFuel,
@@ -39,13 +42,15 @@ export default {
       let form    = document.querySelector('.pl-createAuction__form');
       let payload = Object.fromEntries(new FormData(form));
       /* appending data to form */
+      payload.fuel_amount = payload.fuel_amount.replace('.','');
+      payload.fuel_amount = payload.fuel_amount.replace(',','');
 
       let checkForPrice    = document.querySelector('#pl-createAuction__withdraw--checkbox');
       if(!checkForPrice.checked){
           Swal.fire({
             position: "bottom-end",
             type: "error",
-            title: "Você precisa concordar com o valor do litro do combustível",
+            title: "É necessário concordar com a possível variação do preço do combustível",
             showConfirmButton: false,
             timer: 8500,
             toast: true
@@ -80,6 +85,11 @@ export default {
         }
       });
     },
+  },
+  async created(){
+    await this.$store.dispatch('auction/fetchPorts');
+    this.ports = await this.$store.getters['auction/getPorts'];
+
   }
 };
 </script>
