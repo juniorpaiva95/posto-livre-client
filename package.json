@@ -19,6 +19,7 @@
     "moment-timezone": "^0.5.31",
     "serve-static": "^1.14.1",
     "sweetalert2": "^8.13.3",
+    "v-money": "^0.8.1",
     "vee-validate": "^2.2.11",
     "vue": "^2.6.10",
     "vue-fancybox": "^1.0.3",

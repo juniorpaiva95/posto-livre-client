@@ -3,7 +3,7 @@
         <div class="container">
             <table class="pl-bidTable__body col-12">
                 <tr>
-                    <td colspan="9" class="pl-bidTable__header">
+                    <td colspan="10" class="pl-bidTable__header">
                         <div class="pl-bidTable__showMore" @click="onToggle" id="filterBtn">
                             <img :src=link>
                             <p class="pl-bidTable__header--text">
@@ -52,7 +52,10 @@
                         <p>LOCAL</p>
                     </td>   
                     <td>
-                        <p>LANCES</p>
+                        <p>STATUS</p>
+                    </td>   
+                    <td>
+                        <p>DETALHES</p>
                     </td>
                 </tr>
                 <tr class="pl-bidTable__item" v-for="(item, i) in items" :key="i" :v-if="item.station.user_id == user.id" :class="`${item.fuel.slug}`">
@@ -83,11 +86,16 @@
                         <!-- use the modal component, pass in the prop -->
                         {{item.pickup_location}}
                     </td>   
+                    <td>
+                        <!-- use the modal component, pass in the prop -->
+                        {{item.status}}
+                        <pl-countdown  :auction="item" :date="new Date(item.date_finish)" :isActive="item.status"></pl-countdown>
+                    </td>   
                     <td class="bid-div" colspan="2">
                         <div class="bid-item">
                             <!-- <span class="bid-value">{{item.bid.formatted || item.bid}}</span> -->
                             <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
-                            <button class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
+                            <button v-if="!isOverdue(item.date_finish)" class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
                         </div>    
                     </td>
                 </tr>
@@ -112,6 +120,8 @@ import PLBtn from '@/components/atoms/pl-btn';
 import PLFilters from '@/components/sections/pl-filters';
 import { mapGetters } from 'vuex';
 import Swal from 'sweetalert2';
+import PlCountdown from "../atoms/pl-countdown";
+import moment from "moment";
 
 export default {
     data: () => ({
@@ -122,8 +132,10 @@ export default {
         link : 'images/icons/other-icons/plus.svg',
         items: [],
         user: [],
+
     }),
     components: {
+        PlCountdown,
         'pl-modal': PLModal,
         'pl-btn': PLBtn,
         'pl-input': PLInput,
@@ -134,7 +146,9 @@ export default {
         btnShowMoreIsVisible: function() {
             // @TODO: Melhorar
             return this.auctionPagination.hasOwnProperty('links') && !!this.auctionPagination.links.next
-        }
+        },
+
+
     },
     methods: {
         onToggle(event){
@@ -148,6 +162,13 @@ export default {
             } else {
                 this.link = 'images/icons/other-icons/plus.svg';
             }
+        },
+        isOverdue(date_finish) {
+            var eventTimeFinish = moment(date_finish);
+            var currentTime = moment();
+            var diffTime = eventTimeFinish.unix() - currentTime.unix();
+
+            return diffTime < 0;
         },
         openModal(item) {
             this.modalData = item;
@@ -224,6 +245,7 @@ export default {
             width: 30px;
             padding: 0px;
             margin-right: 10px;
+            margin-top: 5px;
             text-align: center;
             border: 2px solid grey!important;
             background-color: #fff;

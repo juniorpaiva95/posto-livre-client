@@ -33,15 +33,15 @@ export default {
         },
         min: {
             type: Number,
-            default: 0,
+            default: 0.000,
         },
         max: {
             type: Number,
-            default: 10,
+            default: 10.000,
         },
         step: {
             type: Number,
-            default: 1,
+            default: .0011,
         }
     },
     data: () => ({
@@ -76,6 +76,7 @@ export default {
             }
             
             this.value = +this.value + this.step;
+            console.log(this.value)
             
 
         },

@@ -4,7 +4,7 @@
             <div @click="decrement()">
                 <img src="images/icons/other-icons/to-down.svg" alt="">
             </div>
-            <input id="pl-input" placeholder="Ex.: 123..." type="text" v-model="value"/>
+            <input id="pl-input" v-mask="'#.###'" placeholder="Ex.: 123..." type="text" v-model="value"/>
             
             <div @click="increment()">
                 <img src="images/icons/other-icons/to-up.svg" alt="">
@@ -39,7 +39,7 @@ export default {
         },
         step: {
             type: Number,
-            default: 1,
+            default: .0011,
         }
     },
     data: () => ({

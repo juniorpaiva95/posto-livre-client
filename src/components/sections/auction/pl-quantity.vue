@@ -2,7 +2,7 @@
   <div class="pl-createAuction__quantity">
     <pl-subsectionHeader :svg="svg" :text="text" :alt="alt"></pl-subsectionHeader>
     <div class="pl-createAuction__quantity--formItem">
-      <input type="number" 
+      <input v-model.lazy="price" v-money="money"
              class="pl-createAuction__quantity--input" 
              placeholder="EX: 8.000" 
              name="fuel_amount">
@@ -12,6 +12,7 @@
 
 <script>
 import PlSubsectionHeader from "./components/pl-subsectionHeader";
+import {VMoney} from 'v-money'
 
 export default {
   components: {
@@ -20,8 +21,19 @@ export default {
   data: () => ({
     svg: "images/icons/create-auction/chart.svg",
     alt: "Quantidade de Combustível",
-    text: "QUANTOS LITROS?"
-  })
+    text: "QUANTOS LITROS?",
+      price: 8000,
+        money: {
+          decimal: ',',
+          thousands: '.',
+          /* prefix: 'R$ ',
+          suffix: ' #', */
+          precision: 0,
+          masked: true /* doesn't work with directive */
+        }
+
+  }),
+  directives: {money: VMoney}
 };
 </script>
 
