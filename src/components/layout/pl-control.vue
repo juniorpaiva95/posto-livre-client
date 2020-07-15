@@ -76,8 +76,13 @@
             <li>
               Meus Leilões
             </li>
-
           </router-link>
+          <router-link :to="{name: 'notificacoes'}">
+            <li>
+              notificações
+            </li>
+          </router-link>
+
         </div>
         <div v-if="distributor && isMobile()">
           <hr>
@@ -86,6 +91,11 @@
           </router-link>
           <router-link :to="{ name: 'distributor.bids' }">
             <li>Meus lances</li>
+          </router-link>
+          <router-link :to="{name: 'notificacoes'}">
+            <li>
+              notificações
+            </li>
           </router-link>
 
         </div>

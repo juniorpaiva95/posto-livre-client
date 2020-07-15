@@ -45,7 +45,8 @@
               </div>
               <div class="pl-modal__content--itens--freight">
                 <p class="pl-modal__content--itens--title">Revendedor</p>
-                <p>{{ item.station.user.social_reason }}</p>
+                <p v-if="item.station">{{ item.station.user.social_reason }}</p>
+                <p v-else>-</p>
               </div>
             </div>
             <div class="pl-modal__content--itens--data">
@@ -58,7 +59,7 @@
                 <p>{{ item.pickup_location }}</p>
               </div>
             </div>
-            <div class="pl-modal__content--itens--data">
+            <div v-if="showFile" class="pl-modal__content--itens--data">
               <div class="pl-modal__content--itens--code">
                 <p class="pl-modal__content--itens--title mb-10">COMPROVANTE DE PAGAMENTO</p>
                 <!-- <p>{{ item.fuel_amount }}L</p> -->
@@ -75,8 +76,9 @@
               </div>
             </div>
           </div>
-          <div class="pl-modal__content--bids">
+          <div v-if="item.bids" class="pl-modal__content--bids">
             <div
+              
               v-bind:key="index"
               class="pl-modal__content--bids--item"
               v-for="(value, index) in sortBidsByAmount"
@@ -111,7 +113,8 @@ export default {
   },
   name: "modal",
   data: () => ({
-    showModal: false
+    showModal: false,
+    showFile: false,
   }),
   computed: {
     sortBidsByAmount: function() {
@@ -131,6 +134,14 @@ export default {
       this.$store.dispatch('auction/sendPaymentVoucher', { auction_id: this.item.id })
 
     }
+  },
+  created() {
+    if(window.location.pathname === '/auctions') {
+      this.showFile = true;
+    }else if(window.location.pathname === '/bids'){
+      this.showFile = true;
+    }
+
   }
 };
 </script>

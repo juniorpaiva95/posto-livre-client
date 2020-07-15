@@ -188,7 +188,6 @@ export default {
       let url = "/api/v1/auctions";
 
       let filterQueryString = filterToQuery(state.filters);
-      if(state.filters)
 
       console.log("filterQueryString");
       console.log(filterQueryString);
@@ -196,13 +195,43 @@ export default {
       await apiService.get(`${url}?${filterQueryString}`).then(response => {
         if (response.status == 200) {
           let data = response.data.auctions;
-          console.log("this is the return of auctions.js => fetchAuctions");
-          console.log(concat);
+          /* console.log("this is the return of auctions.js => fetchAuctions");
+          console.log(concat); */
           if (concat) {
             commit("concatAuctions", data);
           } else {
             commit("setAuctions", data);
           }
+
+        }
+      });
+    },
+    fetchLot: async ({ state, commit, rootState }, payload) => {
+      let concat = rootState.auction.concat;
+      let fromOriginFilters = payload ? payload.hasOwnProperty('fromFilters') : false;
+      if (concat && !fromOriginFilters) {
+        commit('incrementPage');
+      }
+      let user = await rootState.auth.user;
+      let url = "/api/v1/lot";
+
+      let lotFilters = state.filters;
+      lotFilters.include = "fuel,port,auctions,bids";
+      
+      let filterQueryString = filterToQuery(state.filters);
+
+      /* console.log("showing filters query strings");
+      console.log(lotFilters)
+      console.log(filterQueryString) */
+
+      
+      await apiService.get(`${url}?${filterQueryString}`).then(response => {
+        if (response.status == 200) {
+          let data = response.data.lots;
+          console.log("this is the return of auctions.js => fetchAuctions");
+          console.log(data);
+          console.log(concat);
+          commit("setAuctions", data);
 
         }
       });

@@ -6,14 +6,14 @@
         </div>    
         
         <div v-if="!isMobile()"><!-- isMobile() -->
-            <pl-table class="container" :data='auctions'>
+            <pl-table class="container" ><!-- :data='auctions' -->
             </pl-table>
         </div>
         <div v-else>
             <pl-table-mobile :data='auctions'> 
             </pl-table-mobile> 
         </div>
-        <pl-questions title="Perguntas frequentes"></pl-questions>
+        <pl-questions title="Perguntas frequentes"></pl-questions> 
        
     </div>
 </template>
@@ -45,17 +45,17 @@ export default {
         }
     }, 
     async created() {
-        this.$store.commit('auction/resetState');
-        this.$store.dispatch('faq/fetchFaqs').then(faqs => {
+        /* this.$store.commit('auction/resetState'); */
+        this.$store.dispatch('faq/fetchFaqs').then(faqs => { 
             this.faqs = faqs;
         });
 
-        await this.$store.commit('auction/setFilters', { status : 1 });
-        this.$store.dispatch('auction/fetchAuctions').then(auctions => {
+        await this.$store.commit('auction/setFilters', { status : 1, include: "fuel,port,auctions,bids" });
+        this.$store.dispatch('auction/fetchLot').then(auctions => {
             console.log(" this is the auctions returned");
             console.log(auctions);
             this.auctions = auctions;
-        })
+        }) 
     }
 }
 </script>
