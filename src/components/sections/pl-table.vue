@@ -119,12 +119,6 @@
               </p>
 
           </td>
-          <td>
-            <div class="bid-item">
-                <!-- <span class="bid-value">{{item.bid.formatted || item.bid}}</span> -->
-                <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item.auctions.auctions[0], item)">...</button>
-            </div>    
-          </td>
 
           <!-- <td>
           </td>-->
@@ -163,7 +157,13 @@
 
                 {{auction.fuel_amount}} L
             </td>
-            
+            <td>
+              <div class="bid-item">
+                  <!-- <span class="bid-value">{{item.bid.formatted || item.bid}}</span> -->
+                  <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(auction, item)">...</button>
+              </div>    
+            </td>
+
 
 
         </tr>

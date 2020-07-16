@@ -59,29 +59,54 @@
                 <p>{{ item.pickup_location }}</p>
               </div>
             </div>
-            <div v-if="showFile" class="pl-modal__content--itens--data">
+            <!-- file input -->
+            <div v-if="showInputFile" class="pl-modal__content--itens--data">
               <div class="pl-modal__content--itens--code">
                 <p class="pl-modal__content--itens--title mb-10">COMPROVANTE DE PAGAMENTO</p>
-                <!-- <p>{{ item.fuel_amount }}L</p> -->
                 <input 
                   type="file" 
                   @change="carregandoComprovante"
                   id="file" 
                   accept=".pdf">
                 <label for="file" id="comprovante-pagamento-btn">Enviar Agora</label>
+                <p class="file_input_text file-sending">Enviando Arquivo..</p>
+                <p class="file_input_text file-sent">Arquivo Enviado</p>
               </div>
               <div class="pl-modal__content--itens--freight">
                 <p class="pl-modal__content--itens--title">FRETE</p>
                 <p class="pl-modal__content--itens--text">{{ item.freight_type }}</p>
               </div>
             </div>
+            <!-- file output -->
+            <div v-if="showOutputFile" class="pl-modal__content--itens--data">
+              <div class="pl-modal__content--itens--code">
+                <p class="pl-modal__content--itens--title mb-10">COMPROVANTE DE PAGAMENTO</p>
+                <p class="file_input_text">Recebido
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="1.06665" width="9.80519" height="1.50849" transform="rotate(45 1.06665 0)" fill="#01A32E"/>
+                    <rect y="6.93335" width="9.80519" height="1.50849" transform="rotate(-45 0 6.93335)" fill="#01A32E"/>
+                  </svg>
+
+                </p>
+                <p class="file_input_text">Aprovado
+                  <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.346624 5.10127L1.88679 3.5611L4.35151 6.02583L4.52829 6.20261L4.70507 6.02583L10.3606 0.370353L11.9259 2.24881L4.5355 9.63923L0.346624 5.10127Z" fill="#FFB119" stroke="white" stroke-width="0.5"/>
+                  </svg>
+
+                </p>
+              </div>
+              <div class="pl-modal__content--itens--freight">
+                <p class="pl-modal__content--itens--title">Download comprovante</p>
+                <button @click="downloadComp()" class="btn-download-comp">Download</button>
+                <!-- <p class="pl-modal__content--itens--text">{{ item.freight_type }}</p> -->
+              </div>
+            </div>
           </div>
           <div v-if="item.bids" class="pl-modal__content--bids">
             <div
-              
               v-bind:key="index"
               class="pl-modal__content--bids--item"
-              v-for="(value, index) in sortBidsByAmount"
+              v-for="(value, index) in sortBidsByAmount" 
             >
               <div class="pl-modal__content--bids--item--title">
                 <p>{{ value.created_at | datetime }}</p>
@@ -114,7 +139,8 @@ export default {
   name: "modal",
   data: () => ({
     showModal: false,
-    showFile: false,
+    showInputFile: false,
+    showOutputFile: false,
   }),
   computed: {
     sortBidsByAmount: function() {
@@ -129,19 +155,39 @@ export default {
     close: function() {
       return this.$emit("close");
     },
-    carregandoComprovante(e){
-      /* console.log(e); */
-      this.$store.dispatch('auction/sendPaymentVoucher', { auction_id: this.item.id })
+    async carregandoComprovante(e){
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Access-Control-Allow-Origin": "*"
+        }
+      };
+
+      e.path[1].classList.add("file-being-sent");
+      console.log(e.target.files[0]);
+      var formData = new FormData();
+      formData.append('file', e.target.files[0]); 
+      for (var key of formData.entries()) {
+        console.log(key[0] + ', ' + key[1]);
+    }
+      await this.$store.commit('auction/setAuctionId', this.item.id);
+
+      await this.$store.dispatch('auction/sendPaymentVoucher', formData, config);
+      e.path[1].classList.remove("file-being-sent");
+      e.path[1].classList.add("file-added");
+    },
+    async downloadComp(){
+      await this.$store.commit('auction/setAuctionId', this.item.id);
+      await this.$store.dispatch('auction/downloadPaymentVoucher', {auction_id: this.item.id});
 
     }
   },
   created() {
     if(window.location.pathname === '/auctions') {
-      this.showFile = true;
+      this.showInputFile = true;
     }else if(window.location.pathname === '/bids'){
-      this.showFile = true;
+      this.showOutputFile = true;
     }
-
   }
 };
 </script>
@@ -161,6 +207,59 @@ input[type="file"]{
 
   letter-spacing: 0.03em;
   margin-top: 20px;
+}
+.btn-download-comp{
+    font-family: $roboto-family;
+  color: #333333;
+  padding: 7px;
+  border: 1px solid #8D99AE;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 14px;
+  background: transparent;
+  /* identical to box height */
+
+  letter-spacing: 0.03em;
+  margin-top: 20px;
+
+}
+.btn-download-comp:hover{
+  color: #fff;
+  background: #8D99AE;
+  cursor: pointer;
+  /* identical to box height */
+
+}
+.file_input_text{
+  font-family: $roboto-family;
+  color: #333333;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+
+}
+.file-sent{
+  display: none;
+}
+.file-sending{
+  display: none;
+}
+.file-being-sent{
+  .file-sending{
+    display: inline;
+  }
+  label{
+    display: none;
+  }
+
+}
+.file-added{
+  .file-sent{
+    display: inline;
+  }
+  label{
+    display: none;
+  }
 }
 .mb-10{
   margin-bottom: 10px !important;
