@@ -46,8 +46,8 @@ export default {
         }
     },
     async created() {
-        await this.$store.commit('auction/setFilters', { status : 1 });
-        this.$store.dispatch('auction/fetchAuctions').then(auctions => {
+        await this.$store.commit('auction/setFilters', { status : 1, include: "fuel,port,auctions,bids" });
+        this.$store.dispatch('auction/fetchLot').then(auctions => {
             this.auctions = auctions;
         });
     }

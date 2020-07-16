@@ -63,10 +63,10 @@ export default {
                 return ;
             }
 
-            this.$store.dispatch('bid/createBid', { auction_id: this.item.id, value: this.value }).then(() => {
+            this.$store.dispatch('bid/createBid', { lot_id: this.item.id, value: this.value }).then(() => {
                 this.showModalBid = true;
                 //Reload auctions
-                this.$store.dispatch('auction/fetchAuctions');
+                this.$store.dispatch('auction/fetchLot');
             });
         },
         increment(){

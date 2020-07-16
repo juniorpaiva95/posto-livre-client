@@ -8,6 +8,7 @@ const INITIAL_STATE = () => {
     ports: [],
     pagination: "",
     concat: false,
+    auction_id: "",
     filters: {
       include: "station,fuel",/* bids,bestBid */
       search: "",
@@ -51,6 +52,9 @@ export default {
     },
     setAuctions(state, auctions) {
       state.auctions = auctions;
+    },
+    setAuctionId(state, id) {
+      state.auction_id = id;
     },
     setports(state, ports) {
       state.ports = ports;
@@ -155,11 +159,45 @@ export default {
         });
       })
     },
-    sendPaymentVoucher: async ({ dispatch }, { auction_id }, payload) => {
+    downloadPaymentVoucher: async ({ dispatch }, { auction_id }) => {
+      await apiService.get(`api/v1/uploads/download/${auction_id}`).then(response => {
+        if (response.data.error.code === 200) {
+          Swal.fire({
+            position: "bottom-end",
+            type: "success",
+            title: "Download realizado com sucesso!",
+            timer: 3000,
+            toast: true
+          });
+        }else {
+          Swal.fire({
+            position: "bottom-end",
+            type: "error",
+            title: response.data.error.message,
+            timer: 3000,
+            toast: true
+          });
+  
+        }
+      }).catch(error => {
+        Swal.fire({
+          position: "bottom-end",
+          type: "error",
+          title: error.message,
+          timer: 3000,
+          toast: true
+        });
+      })
+    },
+
+    sendPaymentVoucher: async ({ commit, state }, payload) => {
       /* console.log("sending payment being called to");
       console.log(auction_id);
       return; */
-      await apiService.post(`api/v1/auctions/${auction_id}/upload`, payload).then(response => {
+      console.log("is payload valid??");
+      console.log(payload);
+      console.log(state.auction_id);
+      await apiService.post(`api/v1/auctions/${state.auction_id}/upload`, payload).then(response => {
         Swal.fire({
           position: "bottom-end",
           type: "success",
@@ -167,12 +205,11 @@ export default {
           timer: 3000,
           toast: true
         });
-        dispatch('fetchAuctions');
       }).catch(error => {
         Swal.fire({
           position: "bottom-end",
           type: "error",
-          title: error.message,
+          title: error.message + " --",
           timer: 3000,
           toast: true
         });
@@ -188,21 +225,50 @@ export default {
       let url = "/api/v1/auctions";
 
       let filterQueryString = filterToQuery(state.filters);
-      if(state.filters)
 
       console.log("filterQueryString");
       console.log(filterQueryString);
-      
+
       await apiService.get(`${url}?${filterQueryString}`).then(response => {
         if (response.status == 200) {
           let data = response.data.auctions;
-          console.log("this is the return of auctions.js => fetchAuctions");
-          console.log(concat);
+          /* console.log("this is the return of auctions.js => fetchAuctions");
+          console.log(concat); */
           if (concat) {
             commit("concatAuctions", data);
           } else {
             commit("setAuctions", data);
           }
+
+        }
+      });
+    },
+    fetchLot: async ({ state, commit, rootState }, payload) => {
+      let concat = rootState.auction.concat;
+      let fromOriginFilters = payload ? payload.hasOwnProperty('fromFilters') : false;
+      if (concat && !fromOriginFilters) {
+        commit('incrementPage');
+      }
+      let user = await rootState.auth.user;
+      let url = "/api/v1/lot";
+
+      let lotFilters = state.filters;
+      lotFilters.include = "fuel,port,auctions,bids";
+
+      let filterQueryString = filterToQuery(state.filters);
+
+      /* console.log("showing filters query strings");
+      console.log(lotFilters)
+      console.log(filterQueryString) */
+
+
+      await apiService.get(`${url}?${filterQueryString}`).then(response => {
+        if (response.status == 200) {
+          let data = response.data.lots;
+          console.log("this is the return of auctions.js => fetchAuctions");
+          console.log(data);
+          console.log(concat);
+          commit("setAuctions", data);
 
         }
       });

@@ -58,7 +58,7 @@
                         <p>DETALHES</p>
                     </td>
                 </tr>
-                <tr class="pl-bidTable__item" v-for="(item, i) in items" :key="i" :v-if="item.station.user_id == user.id" :class="`${item.fuel.slug}`">
+                <tr class="pl-bidTable__item" v-for="(item, i) in items" :key="i"  :class="`${item.fuel.slug}`"><!-- :v-if="item.station.user_id == user.id" -->
                     <!--@click="showModal = true"-->
                     <td>
                         {{i}}

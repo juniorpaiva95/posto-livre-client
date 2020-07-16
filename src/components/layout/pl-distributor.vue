@@ -9,9 +9,9 @@
                 <div class="pl-header-distributor__content">
                     <div class="box">
                         <div v-if="!isMobile()" class="pl-header-distributor__items">
-<!--                            <router-link :to="{name: 'notificacoes'}">-->
-<!--                                <pl-navbell/>-->
-<!--                            </router-link>-->
+                           <router-link :to="{name: 'notificacoes'}">
+                               <pl-navbell/>
+                           </router-link>
                             <router-link :to="{ name: 'distributor.feed' }">
                                 <pl-navItem>Leilões</pl-navItem>
                             </router-link>

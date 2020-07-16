@@ -14,9 +14,9 @@
                         </router-link>
 
                         <div v-if="!isMobile()" class="pl-header-station__items">
-<!--                            <router-link :to="{ name: 'notificacoes'}">-->
-<!--                                <pl-navbell />-->
-<!--                            </router-link>-->
+                           <router-link :to="{ name: 'notificacoes'}">
+                               <pl-navbell />
+                           </router-link>
                             <router-link :to="{ name: 'station.feed' }">
                                 <pl-navItem>Histórico</pl-navItem>
                             </router-link>
