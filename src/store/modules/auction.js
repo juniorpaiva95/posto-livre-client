@@ -5,6 +5,7 @@ import { filterToQuery } from "../../utils/api/util";
 const INITIAL_STATE = () => {
   return {
     auctions: [],
+    auction: [],
     ports: [],
     pagination: "",
     concat: false,
@@ -30,6 +31,9 @@ export default {
     getAuctions(state) {
       return state.auctions;
     },
+    getAuction(state) {
+      return state.auction;
+    },
     getPorts(state) {
       return state.ports;
     },
@@ -52,6 +56,9 @@ export default {
     },
     setAuctions(state, auctions) {
       state.auctions = auctions;
+    },
+    setAuction(state, auction) {
+      state.auction = auction;
     },
     setAuctionId(state, id) {
       state.auction_id = id;
@@ -239,6 +246,19 @@ export default {
           } else {
             commit("setAuctions", data);
           }
+
+        }
+      });
+    },
+    fetchAuction: async ({ state, commit }) => {
+      let url = "/api/v1/auctions";
+
+      let filterQueryString = filterToQuery(state.filters);
+
+      await apiService.get(`${url}?${filterQueryString}`).then(response => {
+        if (response.status == 200) {
+          let data = response.data.auctions;
+          commit("setAuction", data);
 
         }
       });
