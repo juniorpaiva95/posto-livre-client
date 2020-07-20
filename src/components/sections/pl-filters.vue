@@ -164,6 +164,7 @@ export default {
                     categoria => categoria !== paramFormatted
                 );
             }
+            this.filters.searchFields = "fuel.name:like";
             this.$store.commit("auction/setConcat", false);
             this.$store.commit("auction/setFilters", this.filters);
             // console.log('Setando os filtros', this.filters);
@@ -221,13 +222,13 @@ export default {
             let dispatchName = "";
             switch (urlAtual) {
                 case "/distributor-feed":
-                    dispatchName = "auction/fetchAuctions";
+                    dispatchName = "auction/fetchLot";
                     break;
                 case "/bids":
                     dispatchName = "auction/fetchDistributorAuctionsWins";
                     break;
                 case "/station-feed":
-                    dispatchName = "auction/fetchAuctions";
+                    dispatchName = "auction/fetchLot";
                     break;
                 case "/auctions":
                     dispatchName = "auction/fetchAuctions";
@@ -235,6 +236,7 @@ export default {
             return dispatchName;
         },
         refreshAuctions() {
+            console.log("calling refresh");
             this.$store.dispatch(this.getDispatchName(), { fromFilters: true });
         }
     }
