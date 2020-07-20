@@ -45,7 +45,12 @@
           <p>LOCAL DE RETIRADA</p>
         </td>
         <td>
+          <p>quantidade total</p>
+        </td>
+        <td>
           <p>MELHOR LANCE</p>
+        </td>
+        <td>
         </td>
         <!-- <td>
                         <p>SEU LANCE</p>
@@ -67,7 +72,7 @@
           </td>
           <td>
             <p class="itemTitle">COMBUSTÍVEL</p>
-            {{item.fuel.name}}
+            {{item.fuel.name}} 
           </td> 
           <!-- <td>
             {{item.fuel_amount}}
@@ -109,6 +114,10 @@
             v-if="showModal" @close="showModal = false"></pl-modal>-->
             <p class="itemTitle">LOCAL DE RETIRADA</p>
             {{item.port.name}} ({{item.port.state_abbreviation}})
+          </td>
+          <td>
+            <p class="itemTitle">QUANTIDADE TOTAL</p>
+            {{getQuantTotal(item.auctions.auctions)}} L
           </td>
           <td>
             <p class="itemTitle">MELHOR LANCE</p>
@@ -163,6 +172,7 @@
                   <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(auction, item)">...</button>
               </div>    
             </td>
+            <td></td>
 
 
 
@@ -243,6 +253,14 @@ export default {
         }
       });
       return bestBid
+    },
+    getQuantTotal(auctions){
+      let total = 0;
+      auctions.forEach(e =>{
+        total += e.fuel_amount;
+      })
+
+      return total;
     },
     handleShowMore() {
       this.$store.commit("auction/setConcat", true);

@@ -32,7 +32,7 @@ export default {
     methods: {
         submitFilter() {
             this.$store.commit('auction/setConcat', false);
-            this.$store.commit('auction/setFilters', { search: "fuel.name:" + this.search, page: 1 });
+            this.$store.commit('auction/setFilters', { search: "fuel.name:" + this.search, page: 1, searchFields: 'fuel.name:like' });
             this.$store.dispatch(this.getDispatchName());
         },
         getDispatchName() {
@@ -40,13 +40,13 @@ export default {
             let dispatchName = "";
             switch (urlAtual) {
                 case "/distributor-feed":
-                    dispatchName = "auction/fetchAuctions";
+                    dispatchName = "auction/fetchLot";
                     break;
                 case "/bids":
                     dispatchName = "auction/fetchDistributorAuctionsWins";
                     break;
                 case "/station-feed":
-                    dispatchName = "auction/fetchAuctions";
+                    dispatchName = "auction/fetchLot";
                     break;
                 case "/auctions":
                     dispatchName = "auction/fetchAuctions";
