@@ -132,7 +132,7 @@
           <!-- <td>
           </td>-->
           <td class="pl-table__input">
-            <template v-if="distributor && !btnIsBlocked(item)">
+            <template v-if="distributor && !btnIsBlocked(item.auctions.auctions[0])">
               <pl-table-input-desktop :item="item" />
             </template>
           </td>
@@ -281,6 +281,8 @@ export default {
       this.btnsBlocked.push(item.id);
     },
     btnIsBlocked(item) {
+      console.log("btnIsBlocked");
+      console.log(this.btnsBlocked.filter(itemData => itemData === item.id).length)
       return this.btnsBlocked.filter(itemData => itemData === item.id).length;
     },
     onToggle(event) {
