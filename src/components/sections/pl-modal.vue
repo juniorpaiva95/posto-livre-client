@@ -207,6 +207,7 @@ export default {
   async created() {
     if(window.location.pathname === '/auctions') {
       this.showInputFile = true;
+
     }else if(window.location.pathname === '/bids'){
       this.showOutputFile = true;
       await this.$store.commit('auction/setFilters', {include:"station,fuel,uploads" ,search: `id:${this.item.id}`, searchFields: 'id:=' });

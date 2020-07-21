@@ -171,6 +171,7 @@ export default {
             return diffTime < 0;
         },
         openModal(item) {
+            console.log("item being passed to open modal");
             this.modalData = item;
             this.showModal = true;
         },
@@ -208,7 +209,7 @@ export default {
         } else {
             this.user = await this.$store.getters['auth/getUser'];
             
-            await this.$store.commit('auction/setFilters', { status : 2, limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
+            await this.$store.commit('auction/setFilters', { status : 2, include: "station,fuel,uploads", limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
             await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
         }
