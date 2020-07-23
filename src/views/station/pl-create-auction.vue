@@ -56,7 +56,28 @@ export default {
             toast: true
           });
         return;
-
+      }
+      if(!payload.fuel_id){
+          Swal.fire({
+            position: "bottom-end",
+            type: "error",
+            title: "É necessário selecionar um tipo de combustível",
+            showConfirmButton: false,
+            timer: 8500,
+            toast: true
+          });
+        return;
+      }
+      if(payload.fuel_amount == "0" || payload.fuel_amount == ""){
+          Swal.fire({
+            position: "bottom-end",
+            type: "error",
+            title: "É necessário informar a quantidade de litros",
+            showConfirmButton: false,
+            timer: 8500,
+            toast: true
+          });
+        return;
       }
 
 

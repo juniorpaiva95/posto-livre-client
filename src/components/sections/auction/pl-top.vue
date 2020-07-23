@@ -13,8 +13,8 @@ export default {
     "pl-title": PlTitle
   },
   data: () => ({
-    title: "CRIE SEU LEILÃO",
-    subtitle: "Mostre sua bandeira, preencha os dados abaixo e crie seu leilão. Tudo simples e com facilidade."
+    title: "SOLICITE SEU PEDIDO",
+    subtitle: "Indique seu interesse, preencha os dados abaixo e faça parte do pedido coletivo. Tudo simples e com facilidade."
   })
 };
 </script>

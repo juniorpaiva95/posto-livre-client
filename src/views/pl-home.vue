@@ -6,6 +6,9 @@
                         <pl-title>Arremate e venda <br class="on-mobile-only"> lotes com os melhores preços por litro</pl-title>
                         <p class="pl-home__presentation--excerpt">
                             Participe de leilões de combustíveis com os melhores preços. 
+                            Crie sua conta, faça <br> pedidos de acordo com sua necessidade e aguarde pelas melhores propostas.
+                            
+                            Participe de leilões de combustíveis com os melhores preços. 
                             Crie sua conta, faça <br> anúncios com sua necessidade e aguarde pelas 
                             melhores propostas de negócio.
                         </p>
@@ -41,7 +44,7 @@
                 </div>
             </div>
         </section>
-        <section class="pl-home__about" id="pros">
+        <!-- <section class="pl-home__about" id="pros">
 
             <div id="about" class="container">
                 <pl-title theme="yellow" class="pl-home__about--title">
@@ -84,7 +87,7 @@
                     </div>
                 </div>
             </div>    
-        </section>
+        </section> -->
         <div class="pl-home__city">
             <img class="pl-home__city--image" :src=link>
         </div>

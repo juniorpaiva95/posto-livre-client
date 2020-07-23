@@ -190,18 +190,17 @@ export default {
     },
     async downloadComp(){
 
-      var fileURL = window.URL.createObjectURL(new Blob([this.current_auction[0].uploads.uploads[0].url]));
+      /* var fileURL = window.URL.createObjectURL(new Blob([this.current_auction[0].uploads.uploads[0].url]));
       var fileLink = document.createElement('a');
 
       fileLink.href = fileURL;
       fileLink.setAttribute('download', 'file.pdf');
       document.body.appendChild(fileLink);
 
-      fileLink.click();
+      fileLink.click(); */
 
-      /* await this.$store.commit('auction/setAuctionId', this.item.id);
-      await this.$store.dispatch('auction/downloadPaymentVoucher', {auction_id: this.item.id});
- */
+      await this.$store.dispatch('auction/downloadPaymentVoucher', {download_url: this.current_auction[0].uploads.uploads[0].url});
+
     }
   },
   async created() {

@@ -1,7 +1,7 @@
 <template>
     <div class="pl-feed">
         <div>
-            <pl-advise title="Acontecendo agora" Subtext="Confira todas as suas transações">
+            <pl-advise title="PEDIDOS FINALIZADOS" Subtext="Confira todas as suas transações já realizadas">
             </pl-advise>
         </div>    
         
