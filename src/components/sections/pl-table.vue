@@ -132,8 +132,8 @@
           <!-- <td>
           </td>-->
           <td class="pl-table__input">
-            <template v-if="distributor && !btnIsBlocked(item.auctions.auctions[0])">
-              <pl-table-input-desktop :item="item" />
+            <template v-if="distributor && !btnIsBlocked(item.auctions.auctions[0])"><!--   -->
+              <pl-table-input-desktop :maxBid="getBestBid(item.bids.bids)" :item="item" />
             </template>
           </td>
 
@@ -249,7 +249,7 @@ export default {
       let bestBid = 9999;
       bids.forEach(e => {
         if(e.value < bestBid){
-          bestBid = e.value;
+          bestBid = +e.value;
         }
       });
       return bestBid

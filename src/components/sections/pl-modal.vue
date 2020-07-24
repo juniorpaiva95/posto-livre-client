@@ -158,7 +158,6 @@ export default {
     sortBidsByAmount: function() {
       let item = this.item;
       return item.bids.bids.sort((a, b) => {
-        console.log(a);
         return a.value - b.value;
       });
     }

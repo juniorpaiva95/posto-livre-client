@@ -4,7 +4,7 @@
             <div @click="decrement()">
                 <img src="images/icons/other-icons/to-down.svg" alt="">
             </div>
-            <input type="number" v-model="value" v-mask="'#.###'" @keypress="onKeydown" @blur="validateBlur"/>
+            <input type="number" v-model="value" v-mask="'#.####'" @keypress="onKeydown" @blur="validateBlur"/>
             <div @click="increment()">
                 <img src="images/icons/other-icons/to-up.svg" alt="">
             </div>
@@ -31,17 +31,20 @@ export default {
         item: {
             type: Object
         },
+        maxBid: {
+            type: Number
+        },
         min: {
             type: Number,
-            default: 0.000,
+            default: 0.0000,
         },
         max: {
             type: Number,
-            default: 10.000,
+            default: 10.0000,
         },
         step: {
             type: Number,
-            default: .0011,
+            default: .00011,
         }
     },
     data: () => ({
@@ -62,9 +65,32 @@ export default {
                         });
                 return ;
             }
+            if(this.value >= this.maxBid){
+                Swal.fire({
+                    position: "bottom-end",
+                    type: "error",
+                    title: "Esse lance não é válido, tente novamente fazendo um lance menor",
+                    showConfirmButton: false,
+                    timer: 8500,
+                    toast: true
+                });
+
+                return;
+            }
+
 
             this.$store.dispatch('bid/createBid', { lot_id: this.item.id, value: this.value }).then(() => {
-                this.showModalBid = true;
+                /* this.showModalBid = true; */
+                Swal.fire({
+                    position: "bottom-end",
+                    type: "success",
+                    title: "Lance ofertado com sucesso",
+                    showConfirmButton: false,
+                    timer: 8500,
+                    toast: true
+                });
+
+
                 //Reload auctions
                 this.$store.dispatch('auction/fetchLot');
             });

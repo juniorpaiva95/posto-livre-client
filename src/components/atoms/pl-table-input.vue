@@ -4,7 +4,7 @@
             <div @click="decrement()">
                 <img src="images/icons/other-icons/to-down.svg" alt="">
             </div>
-            <input id="pl-input" v-mask="'#.###'" placeholder="Ex.: 123..." type="text" v-model="value"/>
+            <input id="pl-input" v-mask="'#.####'" placeholder="Ex.: 123..." type="text" v-model="value"/>
             
             <div @click="increment()">
                 <img src="images/icons/other-icons/to-up.svg" alt="">
@@ -20,6 +20,8 @@
 <script>
 import PLBtn from '@/components/atoms/pl-btn';
 import PLBidModal from '@/components/sections/pl-bidModal';
+import Swal from 'sweetalert2';
+
 export default {
     components: {
         'pl-btn': PLBtn,
@@ -28,6 +30,9 @@ export default {
     props: {
         item: {
             type: Object
+        },
+        maxBid: {
+            type: Number
         },
         min: {
             type: Number,
@@ -39,7 +44,7 @@ export default {
         },
         step: {
             type: Number,
-            default: .0011,
+            default: .00011,
         }
     },
     data: () => ({
@@ -48,8 +53,29 @@ export default {
     }),
     methods:{
         darLance() {
+            if(this.value >= this.maxBid){
+                Swal.fire({
+                    position: "bottom-end",
+                    type: "error",
+                    title: "Esse lance não é válido, tente novamente fazendo um lance menor",
+                    showConfirmButton: false,
+                    timer: 8500,
+                    toast: true
+                });
+
+                return;
+            }
             this.$store.dispatch('bid/createBid', {auction_id: this.item.id, value: this.value}).then(() => {
-                this.showModalBid = true;
+                /* this.showModalBid = true; */
+                Swal.fire({
+                    position: "bottom-end",
+                    type: "success",
+                    title: "Lance ofertado com sucesso",
+                    showConfirmButton: false,
+                    timer: 8500,
+                    toast: true
+                });
+
                 //Reload auctions
                 this.$store.dispatch('auction/fetchAuctions');
             });

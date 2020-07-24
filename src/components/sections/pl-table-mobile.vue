@@ -87,11 +87,14 @@
               </div>
               <div class="expand__freight">
                 <p class="pl-table-mobile__item--title">Restam</p>
+                <div style="display: none">
+                  <pl-countdown @handleOverdue="disableBtnDarLance(auction)" :auction="auction"></pl-countdown>
+                </div>
                 <p>{{auction.date_finish}}</p>
               </div>
             </div>
-            <template v-if="distributor">
-              <pl-table-input :item="item"></pl-table-input>
+            <template v-if="distributor && !btnIsBlocked(item.auctions.auctions[0])">
+              <pl-table-input :maxBid="getBestBid(item.bids.bids)" :item="item"></pl-table-input>
             </template>
           </div>
         </div>
@@ -119,6 +122,7 @@ import PLFilters from "@/components/sections/pl-filters";
 import PLBtn from "@/components/atoms/pl-btn";
 import { mapGetters } from "vuex";
 import PLModal from '@/components/sections/pl-modal';
+import PLCountdown from "@/components/atoms/pl-countdown";
 
 export default {
   props: {
@@ -132,7 +136,9 @@ export default {
     'pl-modal': PLModal,
     "pl-table-input": PLTableInput,
     "pl-filters": PLFilters,
-    "pl-btn": PLBtn
+    "pl-btn": PLBtn,
+    "pl-countdown": PLCountdown
+
   },
   computed: {
     ...mapGetters({
@@ -149,7 +155,9 @@ export default {
     modalData: '',
     showModal: false,
     showModalBid: false,
-    items: []
+    items: [],
+    btnsBlocked: []
+
   }),
   methods: {
     openModal(auction, item) {
@@ -161,11 +169,21 @@ export default {
       this.modalData = modalItem;
       this.showModal = true;
     },
+    disableBtnDarLance(item) {
+      this.btnsBlocked.push(item.id);
+    },
+
+    btnIsBlocked(item) {
+      console.log("btnIsBlocked");
+      console.log(this.btnsBlocked.filter(itemData => itemData === item.id).length)
+      return this.btnsBlocked.filter(itemData => itemData === item.id).length;
+    },
+
     getBestBid(bids) {
       let bestBid = 9999;
       bids.forEach(e => {
         if (e.value < bestBid) {
-          bestBid = e.value;
+          bestBid = +e.value;
         }
       });
       return bestBid;
