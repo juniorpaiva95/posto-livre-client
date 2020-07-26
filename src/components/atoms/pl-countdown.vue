@@ -25,7 +25,8 @@ export default {
         return {
             eventTimeFinish: moment(this.$props.auction.date_finish),
             currentTime: moment(),
-            interval: 1000
+            interval: 1000,
+            eventIsEmitted: false
         };
     },
     created() {
@@ -57,10 +58,19 @@ export default {
             return Math.abs(this.duration.seconds()) < 10 ? '0' + Math.abs(this.duration.seconds()): Math.abs(this.duration.seconds());
         },
         isOverdue() {
+            if(!this.eventIsEmitted)
+                this.emitEvent();   
             return this.diffTime < 0;
+
         }
     },
     methods: {
+        emitEvent() {
+            this.eventIsEmitted = true;
+            console.log("event being emited");
+            this.$emit('handleOverdue', true)
+        },
+
         refreshCurrentTime() {
             this.currentTime = moment();
         },

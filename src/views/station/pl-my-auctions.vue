@@ -1,7 +1,7 @@
 <template>
     <div class="pl-my-auctions">
         <div>
-            <pl-advise title="Meus Leilões" Subtext="Confira todas as suas transações">
+            <pl-advise title="ACONTECENDO AGORA" Subtext="Confira todos os leilões em andamento e já encerrados">
             </pl-advise>
         </div>  
         <div class="container">

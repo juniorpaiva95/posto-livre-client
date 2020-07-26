@@ -105,6 +105,7 @@
                                 v-validate="'required'"
                                 class="pl-register__input"
                                 placeholder="Selecione"
+                                id="current-register-type"
                                 :class="{ 'has-error': errors.has('tipo') }"
                             >
                                 <option value disabled selected hidden
@@ -327,10 +328,14 @@
                 </form>
             </div>
         </div>
-        <pl-modal-terms
+        <pl-modal-terms-station
             v-if="showModal"
             @close="showModal = false"
-        ></pl-modal-terms>
+        ></pl-modal-terms-station>
+        <pl-modal-terms-distributor
+            v-if="showModalDist"
+            @close="showModalDist = false"
+        ></pl-modal-terms-distributor>
     </div>
 </template>
 
@@ -339,13 +344,15 @@
     import Swal from "sweetalert2";
 
     import PLModalTerms from "@/components/sections/pl-modalTerms";
+    import PLModalTermsDistributor from "@/components/sections/pl-modalTerms-distributor";
     import PlLoading from '@/components/atoms/pl-loading';
 
     export default {
         components: {
             "pl-loading": PlLoading,
             "pl-btn": PLBtn,
-            "pl-modal-terms": PLModalTerms
+            "pl-modal-terms-station": PLModalTerms,
+            "pl-modal-terms-distributor": PLModalTermsDistributor
         },
         data() {
             return {
@@ -380,6 +387,7 @@
                     }
                 },
                 showModal: false,
+                showModalDist: false,
                 options: [
                     {value: "station", text: "Revendedor"},
                     {value: "distributor", text: "Distribuidor"}
@@ -510,7 +518,7 @@
                             position: "bottom-end",
                             type: "error",
                             title:
-                                "O preenchimento dos campos demarcados são obrigatórios",
+                                "O preenchimento dos campos demarcados é obrigatório",
                             showConfirmButton: false,
                             timer: 8500,
                             toast: true
@@ -527,7 +535,13 @@
                 let textMobile = "Selecione suas imagens";
             },
             triggerModal() {
-                this.showModal = true;
+                /* current-register-type */
+                var currentType = document.getElementById("current-register-type");
+                if(currentType.value == "distributor"){
+                    this.showModalDist = true;
+                }else{
+                    this.showModal = true;
+                }
             }
         },
         mounted() {

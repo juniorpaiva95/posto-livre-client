@@ -22,9 +22,10 @@
                         <pl-filters></pl-filters>
                 </div>
                 <!-- MOBILE -->
+                <template v-for="(item, i) in items" >
                 <div class="pl-table-mobile__item"
                 :class="`${item.fuel.slug}`"
-                 v-for="(item, i) in items" :key="i">
+                 v-if="!isOverdue(item.date_finish)" :key="i">
                     <table class="pl-table-mobile__item--content">
                         <tr>
                             <td class="pl-table-mobile__item--left">
@@ -83,7 +84,7 @@
                     </table>
                         
                 </div>
-
+                </template>
                 <!-- LEGACY -->
                 <!-- <tr class="pl-bidTable__labels" >
                     <td class="pl-bidTable__cod">
@@ -223,6 +224,13 @@ export default {
                 this.link = 'images/icons/other-icons/plus.svg';
             }
         },
+        isOverdue(date_finish) {
+            var eventTimeFinish = moment(date_finish);
+            var currentTime = moment();
+            var diffTime = eventTimeFinish.unix() - currentTime.unix();
+            return diffTime < 0;
+        },
+
         openModal(item) {
             this.modalData = item;
             this.showModal = true;

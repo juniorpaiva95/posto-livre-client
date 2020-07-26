@@ -2,7 +2,8 @@
   <div class="pl-createAuction__quantity">
     <pl-subsectionHeader :svg="svg" :text="text" :alt="alt"></pl-subsectionHeader>
     <div class="pl-createAuction__quantity--formItem">
-      <input v-model.lazy="price" v-money="money"
+      <input  v-model.lazy="price"
+            v-money="price !== null ? money : null"
              class="pl-createAuction__quantity--input" 
              placeholder="EX: 8.000" 
              name="fuel_amount">
@@ -22,7 +23,7 @@ export default {
     svg: "images/icons/create-auction/chart.svg",
     alt: "Quantidade de Combustível",
     text: "QUANTOS LITROS?",
-      price: 8000,
+      price: null,
         money: {
           decimal: ',',
           thousands: '.',

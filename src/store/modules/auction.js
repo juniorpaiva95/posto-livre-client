@@ -119,7 +119,7 @@ export default {
               });
 
               return resolve(state.auctions);
-            } else if (response.status == 400) {
+            } else if (response.status == 422) {
               Swal.fire({
                 position: "bottom-end",
                 type: "error",
@@ -132,6 +132,16 @@ export default {
             }
 
             return reject(response);
+          },
+          (error) => {
+            Swal.fire({
+              position: "bottom-end",
+              type: "error",
+              title: "Horário de leilão não permitido! Tente solicitar entre os horários de 12h às 17h",
+              showConfirmButton: false,
+              timer: 8500,
+              toast: true
+            });
           },
           () => {
             Swal.fire({
@@ -166,8 +176,8 @@ export default {
         });
       })
     },
-    downloadPaymentVoucher: async ({ dispatch }, { auction_id }) => {
-      await apiService.get(`api/v1/uploads/download/${auction_id}`).then(response => {
+    downloadPaymentVoucher: async ({ dispatch }, { download_url }) => {
+      await apiService.get(`${download_url}`).then(response => {
         if (response.data.error.code === 200) {
           Swal.fire({
             position: "bottom-end",

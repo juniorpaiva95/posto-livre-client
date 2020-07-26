@@ -158,7 +158,6 @@ export default {
     sortBidsByAmount: function() {
       let item = this.item;
       return item.bids.bids.sort((a, b) => {
-        console.log(a);
         return a.value - b.value;
       });
     }
@@ -190,23 +189,23 @@ export default {
     },
     async downloadComp(){
 
-      var fileURL = window.URL.createObjectURL(new Blob([this.current_auction[0].uploads.uploads[0].url]));
+      /* var fileURL = window.URL.createObjectURL(new Blob([this.current_auction[0].uploads.uploads[0].url]));
       var fileLink = document.createElement('a');
 
       fileLink.href = fileURL;
       fileLink.setAttribute('download', 'file.pdf');
       document.body.appendChild(fileLink);
 
-      fileLink.click();
+      fileLink.click(); */
 
-      /* await this.$store.commit('auction/setAuctionId', this.item.id);
-      await this.$store.dispatch('auction/downloadPaymentVoucher', {auction_id: this.item.id});
- */
+      await this.$store.dispatch('auction/downloadPaymentVoucher', {download_url: this.current_auction[0].uploads.uploads[0].url});
+
     }
   },
   async created() {
     if(window.location.pathname === '/auctions') {
       this.showInputFile = true;
+
     }else if(window.location.pathname === '/bids'){
       this.showOutputFile = true;
       await this.$store.commit('auction/setFilters', {include:"station,fuel,uploads" ,search: `id:${this.item.id}`, searchFields: 'id:=' });

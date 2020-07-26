@@ -40,7 +40,7 @@
                         <p>QUANTIDADE</p>
                     </td>    
                     <td>
-                        <p>DATA DE ENTREGA</p>
+                        <p>TÉRMINO DO LEILÃO </p>
                     </td>    
                     <td>
                         <p>FRETE</p>
@@ -58,47 +58,50 @@
                         <p>DETALHES</p>
                     </td>
                 </tr>
-                <tr class="pl-bidTable__item" v-for="(item, i) in items" :key="i"  :class="`${item.fuel.slug}`"><!-- :v-if="item.station.user_id == user.id" -->
-                    <!--@click="showModal = true"-->
-                    <td>
-                        {{i}}
-                    </td>
-                    <td>
-                        {{ item.created_at | datetime }}
-                    </td>
-                    <td>
-                        {{item.fuel.name}}
-                    </td>
-                    <td>
-                        {{item.fuel_amount}} L
-                    </td>
-                    <td>
-                        {{ item.date_finish | datetime }}
-                    </td>
+                <template v-for="(item, i) in items" >
+                    <tr  class="pl-bidTable__item"  :key="i" v-if="!isOverdue(item.date_finish)" :class="`${item.fuel.slug}`"><!-- :v-if="item.station.user_id == user.id" -->
+                        <!--@click="showModal = true"-->
+                        <td>
+                            {{i}}
+                        </td>
+                        <td>
+                            {{ item.created_at | datetime }}
+                        </td>
+                        <td>
+                            {{item.fuel.name}}
+                        </td>
+                        <td>
+                            {{item.fuel_amount}} L
+                        </td>
+                        <td>
+                            {{ item.date_finish | datetime }}
+                        </td>
 
-                    <td>
-                        {{item.freight_type}}
-                    </td>
-                    <td>
-                        {{item.station.user.social_reason}}
-                    </td>
-                    <td>
-                        <!-- use the modal component, pass in the prop -->
-                        {{item.pickup_location}}
-                    </td>   
-                    <td>
-                        <!-- use the modal component, pass in the prop -->
-                        {{item.status}}
-                        <pl-countdown  :auction="item" :date="new Date(item.date_finish)" :isActive="item.status"></pl-countdown>
-                    </td>   
-                    <td class="bid-div" colspan="2">
-                        <div class="bid-item">
-                            <!-- <span class="bid-value">{{item.bid.formatted || item.bid}}</span> -->
-                            <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
-                            <button v-if="!isOverdue(item.date_finish)" class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
-                        </div>    
-                    </td>
-                </tr>
+                        <td>
+                            {{item.freight_type}}
+                        </td>
+                        <td>
+                            {{item.station.user.social_reason}}
+                        </td>
+                        <td>
+                            <!-- use the modal component, pass in the prop -->
+                            {{item.pickup_location}}
+                        </td>   
+                        <td>
+                            <!-- use the modal component, pass in the prop -->
+                            {{item.status}}
+                            <pl-countdown :auction="item" :date="new Date(item.date_finish)" :isActive="item.status"></pl-countdown>
+                        </td>   
+                        <td class="bid-div" colspan="2">
+                            <div class="bid-item">
+                                <!-- <span class="bid-value">{{item.bid.formatted || item.bid}}</span> -->
+                                <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
+                                <button v-if="!isOverdue(item.date_finish)" class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
+                            </div>    
+                        </td>
+
+                    </tr>
+                </template>
             </table>
             <div class="col-12" v-if="btnShowMoreIsVisible">
                 <div class="pl-bidTable__button">
@@ -132,6 +135,7 @@ export default {
         link : 'images/icons/other-icons/plus.svg',
         items: [],
         user: [],
+
 
     }),
     components: {
@@ -167,10 +171,10 @@ export default {
             var eventTimeFinish = moment(date_finish);
             var currentTime = moment();
             var diffTime = eventTimeFinish.unix() - currentTime.unix();
-
             return diffTime < 0;
         },
         openModal(item) {
+            console.log("item being passed to open modal");
             this.modalData = item;
             this.showModal = true;
         },
@@ -208,7 +212,7 @@ export default {
         } else {
             this.user = await this.$store.getters['auth/getUser'];
             
-            await this.$store.commit('auction/setFilters', { status : 2, limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
+            await this.$store.commit('auction/setFilters', { status : 2, include: "station,fuel,uploads", limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
             await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
         }
@@ -226,6 +230,9 @@ export default {
 <style lang="scss">
 .swal2-confirm, .swal2-cancel, #swal2-content, .swal2-title {
     font-family: 'barlow', sans-serif;
+}
+.d-none{
+    display: none !important;
 }
 .pl-bidTable{
     font-family: 'Roboto', sans-serif;

@@ -10,7 +10,7 @@
                     <div class="box">
 
                         <router-link :to="{ name: 'station.createauction' }">
-                            <pl-btn class='pl-header-station__start' text="Criar Leilão" type="standard"></pl-btn>
+                            <pl-btn class='pl-header-station__start' text="Criar Pedido" type="standard"></pl-btn>
                         </router-link>
 
                         <div v-if="!isMobile()" class="pl-header-station__items">
