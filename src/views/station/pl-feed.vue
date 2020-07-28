@@ -3,25 +3,35 @@
         <div>
             <pl-advise title="PEDIDOS FINALIZADOS" Subtext="Confira todas as suas transações já realizadas">
             </pl-advise>
-        </div>    
-        
-        <div v-if="!isMobile()"><!-- isMobile() -->
-            <pl-table class="container" ><!-- :data='auctions' -->
+        </div>  
+        <div class="container">
+            <div v-if="!isMobile()">
+                <pl-auctions :endedOnly="true"></pl-auctions>
+            </div>
+            <div v-else>
+                <pl-auctions-mobile :endedOnly="true"></pl-auctions-mobile>
+            </div>
+        </div> 
+        <!-- <div v-if="!isMobile()">//isMobile()
+            <pl-table class="container" >//:data='auctions'
             </pl-table>
         </div>
         <div v-else>
             <pl-table-mobile :data='auctions'> 
             </pl-table-mobile> 
         </div>
-        <pl-questions title="Perguntas frequentes"></pl-questions> 
-       
+        <pl-questions title="Perguntas frequentes"></pl-questions>  -->
+
     </div>
+
 </template>
 <script>
 import PLAdvise from '@/components/sections/pl-advise';
 import PLTable from '@/components/sections/pl-table';
 import PLTableMobile from '@/components/sections/pl-table-mobile';
 import PLQuestions from '@/components/sections/pl-questions';
+import PlAuctions from '@/components/sections/pl-auction-table';
+import PlAuctionsMobile from '@/components/sections/pl-auction-table-mobile';
 
 export default {
     components: {
@@ -29,6 +39,9 @@ export default {
         'pl-table': PLTable,
         'pl-questions': PLQuestions,
         'pl-table-mobile': PLTableMobile,
+        'pl-auctions': PlAuctions,
+        'pl-auctions-mobile': PlAuctionsMobile,
+
     },
     data: () => ({
         auctions: [],
@@ -44,8 +57,7 @@ export default {
             }
         }
     }, 
-    async created() {
-        /* this.$store.commit('auction/resetState'); */
+    /* async created() {
         this.$store.dispatch('faq/fetchFaqs').then(faqs => { 
             this.faqs = faqs;
         });
@@ -56,7 +68,7 @@ export default {
             console.log(auctions);
             this.auctions = auctions;
         }) 
-    }
+    } */
 }
 </script>
 <style lang="scss">

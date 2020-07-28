@@ -59,7 +59,54 @@
                     </td>
                 </tr>
                 <template v-for="(item, i) in items" >
-                    <tr  class="pl-bidTable__item"  :key="i" v-if="!isOverdue(item.date_finish)" :class="`${item.fuel.slug}`"><!-- :v-if="item.station.user_id == user.id" -->
+                    <template v-if="endedOnly">
+                        <tr  class="pl-bidTable__item"  :key="i" v-if="isOverdue(item.date_finish)" :class="`${item.fuel.slug}`"> 
+                            <!--@click="showModal = true"-->
+                            <td>
+                                {{item.id}}
+                            </td>
+                            <td>
+                                {{ item.created_at | datetime }}
+                            </td>
+                            <td>
+                                {{item.fuel.name}}
+                            </td>
+                            <td>
+                                {{item.fuel_amount}} L
+                            </td>
+                            <td>
+                                {{ item.date_finish | datetime }}
+                            </td>
+
+                            <td>
+                                {{item.freight_type}}
+                            </td>
+                            <td>
+                                {{item.station.user.social_reason}}
+                            </td>
+                            <td>
+                                <template v-if="item.lot">
+                                    <!-- use the modal component, pass in the prop -->
+                                    {{item.lot.port.name}}
+                                </template>
+                            </td>   
+                            <td>
+                                <!-- use the modal component, pass in the prop -->
+                                {{item.status}}
+                                <pl-countdown :auction="item" :date="new Date(item.date_finish)" :isActive="item.status"></pl-countdown>
+                            </td>   
+                            <td class="bid-div" colspan="2">
+                                <div class="bid-item">
+                                    <!-- <span class="bid-value">{{item.bid.formatted || item.bid}}</span> -->
+                                    <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
+                                    <button v-if="!isOverdue(item.date_finish)" class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
+                                </div>    
+                            </td>
+
+                        </tr>
+                    </template>
+
+                    <tr  class="pl-bidTable__item"  :key="i" v-else :class="`${item.fuel.slug}`"> 
                         <!--@click="showModal = true"-->
                         <td>
                             {{item.id}}
@@ -84,8 +131,10 @@
                             {{item.station.user.social_reason}}
                         </td>
                         <td>
-                            <!-- use the modal component, pass in the prop -->
-                            {{item.lot.port.name}}
+                            <template v-if="item.lot">
+                                <!-- use the modal component, pass in the prop -->
+                                {{item.lot.port.name}}
+                            </template>
                         </td>   
                         <td>
                             <!-- use the modal component, pass in the prop -->
@@ -138,6 +187,9 @@ export default {
 
 
     }),
+    props: {
+        endedOnly: Boolean,
+    },
     components: {
         PlCountdown,
         'pl-modal': PLModal,

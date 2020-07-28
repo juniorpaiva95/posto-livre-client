@@ -23,9 +23,10 @@
                 </div>
                 <!-- MOBILE -->
                 <template v-for="(item, i) in items" >
+                <template v-if="endedOnly">
                 <div class="pl-table-mobile__item"
                 :class="`${item.fuel.slug}`"
-                 v-if="!isOverdue(item.date_finish)" :key="i">
+                 v-if="isOverdue(item.date_finish)" :key="i">
                     <table class="pl-table-mobile__item--content">
                         <tr>
                             <td class="pl-table-mobile__item--left">
@@ -64,7 +65,7 @@
 
                             <td class="pl-table-mobile__item--type">
                                 <p class="pb-10">{{item.fuel.name}}</p>
-                                <p>{{item.lot.port.name}}</p>
+                                <p v-if="item.lot">{{item.lot.port.name}}</p>
                             </td>
                             <td class="pl-table-mobile__item--bid">
                                 <!-- <p class="pl-table-mobile__item--title">Seu lance</p> -->
@@ -85,69 +86,68 @@
                         
                 </div>
                 </template>
-                <!-- LEGACY -->
-                <!-- <tr class="pl-bidTable__labels" >
-                    <td class="pl-bidTable__cod">
-                        <p>#COD.</p>
-                    </td>    
-                    <td>
-                        <p>DATA</p>
-                    </td>    
-                    <td>
-                        <p>COMBUSTÍVEL</p>
-                    </td>   
-                    <td>
-                        <p>QUANTIDADE</p>
-                    </td>    
-                    <td>
-                        <p>DATA DE ENTREGA</p>
-                    </td>    
-                    <td>
-                        <p>FRETE</p>
-                    </td>    
-                    <td>
-                        <p>REVENDEDOR</p>
-                    </td>    
-                    <td>
-                        <p>LOCAL</p>
-                    </td>   
-                    <td>
-                        <p>LANCES</p>
-                    </td>
-                </tr>
-                <tr class="pl-bidTable__item" v-for="(item, i) in items" :key="i" :v-if="item.station.user_id == user.id" :class="`${item.fuel.slug}`">
-                    <td>
-                        {{i}}
-                    </td>
-                    <td>
-                        {{ item.created_at | datetime }}
-                    </td>
-                    <td>
-                        {{item.fuel.name}}
-                    </td>
-                    <td>
-                        {{item.fuel_amount}} L
-                    </td>
-                    <td>
-                        {{ item.date_finish | datetime }}
-                    </td>
+                <div class="pl-table-mobile__item"
+                :class="`${item.fuel.slug}`"
+                 v-else :key="i">
+                    <table class="pl-table-mobile__item--content">
+                        <tr>
+                            <td class="pl-table-mobile__item--left">
+                                <p class="pl-table-mobile__item--title">Data</p>
+                                <div class="pl-table-mobile__item--slot" v-html="formatDate(item.date_start)">
+                                    {{new Date(item.date_start).getDay()}}
+                                </div>
+                                <p class="pl-table-mobile__item--title">COD</p>
+                                <div class="pl-table-mobile__item--slot" v-html="item.id">
+                                    {{item.id}}
+                                </div>
+                                
+                            </td>
+                            <td class="pl-table-mobile__item--left">
+                                <p class="pl-table-mobile__item--title">Posto</p>
+                                <div class="pl-table-mobile__item--slot" v-html="(item.station.social_reason)? item.station.social_reason : '-'">
+                                    {{item.station.social_reason}}
+                                </div>
+                                <p class="pl-table-mobile__item--title">Quantidade</p>
+                                <div class="pl-table-mobile__item--slot" v-html="item.fuel_amount + ' L'">
+                                    {{item.fuel_amount}} L
+                                </div>
+                                
+                            </td>
+                            <td class="pl-table-mobile__item--left">
+                                <p class="pl-table-mobile__item--title">Melhor lance</p>
+                                <div class="pl-table-mobile__item--slot" v-html="(item.low_bid)? item.low_bid : '-'">
+                                    {{item.low_bid}}
+                                </div>
+                                <p class="pl-table-mobile__item--title">frete</p>
+                                <div class="pl-table-mobile__item--slot" v-html="item.freight_type">
+                                    {{item.freight_type}}
+                                </div>
+                                
+                            </td>
 
-                    <td>
-                        {{item.freight_type}}
-                    </td>
-                    <td>
-                        {{item.station.user.social_reason}}
-                    </td>
-                    <td>
-                        {{item.pickup_location}}
-                    </td>   
-                    <td class="bid-div" colspan="2">
-                        <div class="bid-item">
-                            <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
-                            <button class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
-                        </div>    
-                    </td>
-                </tr> -->
+                            <td class="pl-table-mobile__item--type">
+                                <p class="pb-10">{{item.fuel.name}}</p>
+                                <p v-if="item.lot">{{item.lot.port.name}}</p>
+                            </td>
+                            <td class="pl-table-mobile__item--bid">
+                                <!-- <p class="pl-table-mobile__item--title">Seu lance</p> -->
+                                <!-- <p v-html="item.bid">{{item.bid}}</p> -->
+                                <div class="bid-item">
+                                    <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
+                                    <!-- <button class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button> -->
+                                </div>    
+
+                            </td>
+                            <td class="pl-table-mobile__item--ico">
+                                <button class="pl-table-mobile__expand"  @click="onToggle">
+                                    <img src="images/icons/other-icons/expand.svg">
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                        
+                </div>
+                </template>
             </div>
             <div class="col-12" v-if="btnShowMoreIsVisible">
                 <div class="pl-bidTable__button">
@@ -181,6 +181,9 @@ export default {
         items: [],
         user: [],
     }),
+    props: {
+        endedOnly: Boolean,
+    },
     components: {
         'pl-modal': PLModal,
         'pl-btn': PLBtn,

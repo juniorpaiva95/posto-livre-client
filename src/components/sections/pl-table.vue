@@ -271,6 +271,7 @@ export default {
       var modalItem = auction;
       modalItem.fuel = item.fuel;
       modalItem.bids = item.bids;
+      modalItem.port = item.port;
       console.log("this is what is being passed to the modal");
       console.log(modalItem);
       this.modalData = modalItem;
