@@ -65,9 +65,9 @@
           :class="`-${item.fuel.slug}`"
         >
           <!--@click="showModal = true"-->
-          <td>
+          <td style="max-width: 90px">
             <p class="itemTitle">#COD.</p>
-            {{i}}
+            {{item.id}}
             <!-- item.id -->
           </td>
           <td>
@@ -271,6 +271,7 @@ export default {
       var modalItem = auction;
       modalItem.fuel = item.fuel;
       modalItem.bids = item.bids;
+      modalItem.port = item.port;
       console.log("this is what is being passed to the modal");
       console.log(modalItem);
       this.modalData = modalItem;
@@ -278,6 +279,7 @@ export default {
     },
 
     disableBtnDarLance(item) {
+      console.log("is being overdue");
       this.btnsBlocked.push(item.id);
     },
     btnIsBlocked(item) {

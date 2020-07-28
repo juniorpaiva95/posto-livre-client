@@ -56,7 +56,11 @@
               </div>
               <div class="pl-modal__content--itens--freight">
                 <p class="pl-modal__content--itens--title">local</p>
-                <p>{{ item.pickup_location }}</p>
+                <p v-if="item.lot">{{ item.lot.port.name }}</p>
+                <p v-if="item.port">{{item.port.name}} ({{item.port.state_abbreviation}})</p>
+                            
+
+
               </div>
             </div>
             <!-- file input -->
@@ -203,7 +207,7 @@ export default {
     }
   },
   async created() {
-    if(window.location.pathname === '/auctions') {
+    if(window.location.pathname === '/station-feed') {
       this.showInputFile = true;
 
     }else if(window.location.pathname === '/bids'){
