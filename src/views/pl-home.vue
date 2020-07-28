@@ -7,10 +7,6 @@
                         <p class="pl-home__presentation--excerpt">
                             Participe de leilões de combustíveis com os melhores preços. 
                             Crie sua conta, faça <br> pedidos de acordo com sua necessidade e aguarde pelas melhores propostas.
-                            
-                            Participe de leilões de combustíveis com os melhores preços. 
-                            Crie sua conta, faça <br> anúncios com sua necessidade e aguarde pelas 
-                            melhores propostas de negócio.
                         </p>
                         <router-link :to="{ name: 'register'}" class="pl-home__link">
                             <pl-btn text="Começar agora" type="wider"></pl-btn>

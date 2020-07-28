@@ -65,9 +65,9 @@
           :class="`-${item.fuel.slug}`"
         >
           <!--@click="showModal = true"-->
-          <td>
+          <td style="max-width: 90px">
             <p class="itemTitle">#COD.</p>
-            {{i}}
+            {{item.id}}
             <!-- item.id -->
           </td>
           <td>
@@ -278,6 +278,7 @@ export default {
     },
 
     disableBtnDarLance(item) {
+      console.log("is being overdue");
       this.btnsBlocked.push(item.id);
     },
     btnIsBlocked(item) {

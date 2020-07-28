@@ -56,7 +56,7 @@
               </div>
               <div class="pl-modal__content--itens--freight">
                 <p class="pl-modal__content--itens--title">local</p>
-                <p>{{ item.pickup_location }}</p>
+                <p>{{ item.lot.port.name }}</p>
               </div>
             </div>
             <!-- file input -->
