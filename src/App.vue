@@ -38,8 +38,8 @@ export default {
         name: "Posto Livre",
         key: "ABCDEFG",
         host: "35.202.204.34",
+        path: '/laravel-websockets',
         statisticsEnabled: true
-        //   path: '/laravel-websockets',
       }
     ],
     form: {
@@ -68,7 +68,7 @@ export default {
       if (this.user) {
         /* console.log(this.user.roles); */
         console.log("connecting with socket");
-        /* this.connect(); */
+        this.connect();
       }
       return this.user !== null && this.user.roles[0].name == "gas_station";
     }

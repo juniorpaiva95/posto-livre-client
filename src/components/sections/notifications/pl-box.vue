@@ -36,6 +36,7 @@
 <script>
 import PlBtn from "@/components/atoms/pl-btn";
 import moment from "moment";
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -86,6 +87,21 @@ export default {
     },
     visualizadas: {}
   }),
+  computed: {
+    ...mapGetters({ user: 'auth/getUser' }),
+    getCurrentUser: function(){
+      return this.user
+    }
+  },
+  async created() {
+        /* console.log("is the user ok??");
+        console.log(this.getCurrentUser); */
+        await this.$store.dispatch('notification/fetchNotifications', { user_id:  this.getCurrentUser.id});
+        this.notificacoes = await this.$store.getters['notification/getNotifications'];
+        console.log("getting the notifications in component");
+        console.log(this.notificacoes);
+  },
+
   filters: {
     relativeTime(date) {
       let monthHour =
