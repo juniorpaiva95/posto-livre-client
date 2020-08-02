@@ -36,11 +36,11 @@
 <script>
 import PlBtn from "@/components/atoms/pl-btn";
 import moment from "moment";
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   components: {
-    "pl-btn": PlBtn
+    "pl-btn": PlBtn,
   },
   data: () => ({
     notificacoes: {
@@ -50,7 +50,7 @@ export default {
         message:
           "Muito bom! Continue acompanhando este leilão e feche seu negócio.",
         date: "2018-08-11 08:59:59",
-        code: "5"
+        code: "5",
       },
       two: {
         title: "Seu lance está vencendo",
@@ -58,7 +58,7 @@ export default {
         message:
           "Muito bom! Continue acompanhando este leilão e feche seu negócio.",
         date: "2018-08-11 08:59:59",
-        code: "41"
+        code: "41",
       },
       three: {
         title: "Seu lance está vencendo",
@@ -66,7 +66,7 @@ export default {
         message:
           "Muito bom! Continue acompanhando este leilão e feche seu negócio.",
         date: "2018-08-11 08:59:59",
-        code: "415"
+        code: "415",
       },
       four: {
         title: "Seu lance está vencendo",
@@ -74,7 +74,7 @@ export default {
         message:
           "Muito bom! Continue acompanhando este leilão e feche seu negócio.",
         date: "2018-08-11 08:59:59",
-        code: "45121"
+        code: "45121",
       },
       five: {
         title: "Seu lance está vencendo",
@@ -82,24 +82,28 @@ export default {
         message:
           "Muito bom! Continue acompanhando este leilão e feche seu negócio.",
         date: "2018-08-11 08:59:59",
-        code: "1"
-      }
+        code: "1",
+      },
     },
-    visualizadas: {}
+    visualizadas: {},
   }),
   computed: {
-    ...mapGetters({ user: 'auth/getUser' }),
-    getCurrentUser: function(){
-      return this.user
-    }
+    ...mapGetters({ user: "auth/getUser" }),
+    getCurrentUser: function () {
+      return this.user;
+    },
   },
   async created() {
-        /* console.log("is the user ok??");
+    /* console.log("is the user ok??");
         console.log(this.getCurrentUser); */
-        await this.$store.dispatch('notification/fetchNotifications', { user_id:  this.getCurrentUser.id});
-        this.notificacoes = await this.$store.getters['notification/getNotifications'];
-        console.log("getting the notifications in component");
-        console.log(this.notificacoes);
+    await this.$store.dispatch("notification/fetchNotifications", {
+      user_id: this.getCurrentUser.id,
+    });
+    this.notificacoes = await this.$store.getters[
+      "notification/getNotifications"
+    ];
+    console.log("getting the notifications in component");
+    console.log(this.notificacoes);
   },
 
   filters: {
@@ -129,20 +133,18 @@ export default {
           M: monthHour,
           MM: monthHour,
           y: dateYear,
-          yy: dateYear
-        }
+          yy: dateYear,
+        },
       });
 
-      return moment(date, "YYYY-MM-DD hh:mm:ss")
-        .startOf(date)
-        .fromNow();
+      return moment(date, "YYYY-MM-DD hh:mm:ss").startOf(date).fromNow();
     },
     formatId(code, len) {
       code = code.toString();
       if (code.length >= len) return "#" + code;
       else return "#" + ("0000" + code).slice(-len);
-    }
-  }
+    },
+  },
 };
 </script>
 

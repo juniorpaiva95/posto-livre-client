@@ -51,12 +51,12 @@ export const router = new Router({
     }
   ],
   // eslint-disable-next-line
-  scrollBehavior (to, from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
     return { x: 0, y: 0 }
   }
 })
 
-router.beforeEach (async (to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const restricted = to.matched.some(record => record.meta.restricted)
   const loggedIn = !!tokenService.getToken();
 
