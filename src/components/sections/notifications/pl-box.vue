@@ -22,7 +22,7 @@
           <span>{{ item.data.message }}</span>
         </div>
         <div class="pl-notificationBox__component--timeArea">
-          <span>{{ item.updated_at | relativeTime }}</span>
+          <span>{{ item.created_at | relativeTime }}</span>
           <!-- <span class="pl-notificationBox__component--id">{{ item.code | formatId(4) }}</span> -->
           <span class="pl-notificationBox__component--id">{{ item.id }}</span>
         </div>
@@ -105,12 +105,19 @@ export default {
     this.notificacoes = await this.$store.getters[
       "notification/getNotifications"
     ];
+    //sorting by date
+    this.notificacoes.sort(function(a,b){
+      return new Date(b.created_at) - new Date(a.created_at);
+    });  
+
     /* console.log("getting the notifications in component");
     console.log(this.notificacoes); */
   },
 
   filters: {
     relativeTime(date) {
+      console.log("date being passed");
+      console.log(date);
       let monthHour =
         moment(date).format("DD [de] MMMM") +
         " ⦁ " +

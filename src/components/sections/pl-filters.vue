@@ -228,7 +228,8 @@ export default {
                     dispatchName = "auction/fetchDistributorAuctionsWins";
                     break;
                 case "/station-feed":
-                    dispatchName = "auction/fetchLot";
+                    /* dispatchName = "auction/fetchLot"; */
+                    dispatchName = "auction/fetchAuctions";
                     break;
                 case "/auctions":
                     dispatchName = "auction/fetchAuctions";

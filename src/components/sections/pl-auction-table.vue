@@ -145,7 +145,7 @@
                             <div class="bid-item">
                                 <!-- <span class="bid-value">{{item.bid.formatted || item.bid}}</span> -->
                                 <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
-                                <button v-if="!isOverdue(item.date_finish)" class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
+                                <button v-if="!isOverdueStart(item.date_start)" class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
                             </div>    
                         </td>
 
@@ -221,6 +221,12 @@ export default {
         },
         isOverdue(date_finish) {
             var eventTimeFinish = moment(date_finish);
+            var currentTime = moment();
+            var diffTime = eventTimeFinish.unix() - currentTime.unix();
+            return diffTime < 0;
+        },
+        isOverdueStart(date_start) {
+            var eventTimeFinish = moment(date_start);
             var currentTime = moment();
             var diffTime = eventTimeFinish.unix() - currentTime.unix();
             return diffTime < 0;
