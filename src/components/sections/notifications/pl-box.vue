@@ -6,27 +6,32 @@
       </div>
     </div>
     <div class="pl-notificationBox__body">
-      <div class="pl-notificationBox__component" v-for="item in notificacoes" :key="item.code">
+      <template v-for="(item, notindex) in notificacoes" >
+
+      <div v-if="notindex < max_current_items" class="pl-notificationBox__component" :key="item.id">
         <div class="pl-notificationBox__component--titleArea">
-          <span>{{ item.title }}</span>
-          <span
+          <span>{{ item.data.title }}</span>
+          <!-- <span
             class="pl-notificationBox__component--dot"
             :class="[
                 'pl-notificationBox__component--dot--' + item.class
             ]"
-          ></span>
+          ></span> -->
         </div>
         <div class="pl-notificationBox__component--textArea">
-          <span>{{ item.message }}</span>
+          <span>{{ item.data.message }}</span>
         </div>
         <div class="pl-notificationBox__component--timeArea">
-          <span>{{ item.date | relativeTime }}</span>
-          <span class="pl-notificationBox__component--id">{{ item.code | formatId(4) }}</span>
+          <span>{{ item.updated_at | relativeTime }}</span>
+          <!-- <span class="pl-notificationBox__component--id">{{ item.code | formatId(4) }}</span> -->
+          <span class="pl-notificationBox__component--id">{{ item.id }}</span>
         </div>
       </div>
-      <div class="pl-notificationBox__component pl-notificationBox__component--button">
-        <div class="pl-notificationBox__buttonArea">
-          <pl-btn type="wider" text="MOSTRAR MAIS"></pl-btn>
+      </template>
+
+      <div v-if="max_current_items < notificacoes.length " class="pl-notificationBox__component pl-notificationBox__component--button">
+        <div v-on:click="addMore" class="pl-notificationBox__buttonArea">
+          <pl-btn  type="wider" text="MOSTRAR MAIS"></pl-btn>
         </div>
       </div>
     </div>
@@ -43,6 +48,7 @@ export default {
     "pl-btn": PlBtn,
   },
   data: () => ({
+    max_current_items: 5,
     notificacoes: {
       one: {
         title: "Seu lance está vencendo",
@@ -76,14 +82,6 @@ export default {
         date: "2018-08-11 08:59:59",
         code: "45121",
       },
-      five: {
-        title: "Seu lance está vencendo",
-        class: "success",
-        message:
-          "Muito bom! Continue acompanhando este leilão e feche seu negócio.",
-        date: "2018-08-11 08:59:59",
-        code: "1",
-      },
     },
     visualizadas: {},
   }),
@@ -92,6 +90,11 @@ export default {
     getCurrentUser: function () {
       return this.user;
     },
+  },
+  methods: {
+    addMore: function () {
+      this.max_current_items = this.max_current_items + 5;
+    }
   },
   async created() {
     /* console.log("is the user ok??");
@@ -102,8 +105,8 @@ export default {
     this.notificacoes = await this.$store.getters[
       "notification/getNotifications"
     ];
-    console.log("getting the notifications in component");
-    console.log(this.notificacoes);
+    /* console.log("getting the notifications in component");
+    console.log(this.notificacoes); */
   },
 
   filters: {
