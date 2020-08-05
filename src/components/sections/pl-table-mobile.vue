@@ -46,7 +46,7 @@
               </td>
               <td class="pl-table-mobile__item--cod">
                 <p class="pl-table-mobile__item--title">Local de retirada</p>
-                <p>{{item.port.name}} ({{item.port.state_abbreviation}})</p>
+                <p>{{item.port.name}} ({{item.port.unit.state_abbreviation}})</p>
 
                 <!-- <p class="pl-table-mobile__item--title">Frete</p>
                 <p>{{item.freight}}</p>-->
@@ -217,6 +217,8 @@ export default {
   created() {
     this.$store.commit("auction/resetState");
     this.items = this.$store.getters["auction/getAuctions"];
+    this.items = this.items.sort((a, b) => a.identifier - b.identifier);
+
     this.$store.watch(
       (state, getters) => getters["auction/getAuctions"],
       (newValue, oldValue) => {

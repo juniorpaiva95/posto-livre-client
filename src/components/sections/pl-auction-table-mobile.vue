@@ -35,8 +35,8 @@
                                     {{new Date(item.date_start).getDay()}}
                                 </div>
                                 <p class="pl-table-mobile__item--title">COD</p>
-                                <div class="pl-table-mobile__item--slot" v-html="item.id">
-                                    {{item.id}}
+                                <div class="pl-table-mobile__item--slot" v-html="item.identifier">
+                                    {{item.identifier}}
                                 </div>
                                 
                             </td>
@@ -97,8 +97,8 @@
                                     {{new Date(item.date_start).getDay()}}
                                 </div>
                                 <p class="pl-table-mobile__item--title">COD</p>
-                                <div class="pl-table-mobile__item--slot" v-html="item.id">
-                                    {{item.id}}
+                                <div class="pl-table-mobile__item--slot" v-html="item.identifier">
+                                    {{item.identifier}}
                                 </div>
                                 
                             </td>
@@ -269,12 +269,16 @@ export default {
         if(window.location.pathname === '/bids') {
             await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
+            this.items = this.items.sort((a, b) => a.identifier - b.identifier);
+
         } else {
             this.user = await this.$store.getters['auth/getUser'];
             
             await this.$store.commit('auction/setFilters', { status : 2,include: "station,fuel,uploads,lot.port.unit,lot.bids", limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
             await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
+            this.items = this.items.sort((a, b) => a.identifier - b.identifier);
+
         }
 
         this.$store.watch(

@@ -18,7 +18,7 @@
             <div class="pl-modal__content--itens--data">
               <div class="pl-modal__content--itens--code">
                 <p class="pl-modal__content--itens--title">ID</p>
-                <p class="pl-modal__content--itens--text">{{ item.id }}</p>
+                <p class="pl-modal__content--itens--text">{{ item.identifier }}</p>
               </div>
               <div class="pl-modal__content--itens--freight">
                 <p class="pl-modal__content--itens--title">frete</p>
