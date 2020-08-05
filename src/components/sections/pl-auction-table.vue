@@ -87,7 +87,7 @@
                             <td>
                                 <template v-if="item.lot">
                                     <!-- use the modal component, pass in the prop -->
-                                    {{item.lot.port.name}}
+                                    {{item.lot.port.name}} ({{item.lot.port.unit.state_abbreviation}})
                                 </template>
                             </td>   
                             <td>
@@ -133,7 +133,7 @@
                         <td>
                             <template v-if="item.lot">
                                 <!-- use the modal component, pass in the prop -->
-                                {{item.lot.port.name}}
+                                {{item.lot.port.name}} ({{item.lot.port.unit.state_abbreviation}})
                             </template>
                         </td>   
                         <td>
@@ -270,7 +270,7 @@ export default {
         } else {
             this.user = await this.$store.getters['auth/getUser'];
             
-            await this.$store.commit('auction/setFilters', { status : 2, include: "station,fuel,uploads,lot.port,lot.bids", limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
+            await this.$store.commit('auction/setFilters', { status : 2, include: "station,fuel,uploads,lot.port.unit,lot.bids", limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
             await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
             this.items.forEach(e => {

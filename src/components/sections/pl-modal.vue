@@ -56,8 +56,8 @@
               </div>
               <div class="pl-modal__content--itens--freight">
                 <p class="pl-modal__content--itens--title">local</p>
-                <p v-if="item.lot">{{ item.lot.port.name }}</p>
-                <p v-if="item.port">{{item.port.name}} ({{item.port.state_abbreviation}})</p>
+                <p v-if="item.lot">{{ item.lot.port.name }} ({{item.lot.port.unit.state_abbreviation}})</p>
+                <p v-if="item.port">{{item.port.name}} ({{item.port.unit.state_abbreviation}})</p>
                             
 
 

@@ -113,7 +113,7 @@
                             ]'
             v-if="showModal" @close="showModal = false"></pl-modal>-->
             <p class="itemTitle">LOCAL DE RETIRADA</p>
-            {{item.port.name}} ({{item.port.state_abbreviation}})
+            {{item.port.name}} ({{item.port.unit.state_abbreviation}})
           </td>
           <td>
             <p class="itemTitle">QUANTIDADE TOTAL</p>
