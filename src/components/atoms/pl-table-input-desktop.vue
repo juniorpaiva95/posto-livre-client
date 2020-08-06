@@ -53,7 +53,7 @@ export default {
     }),
     methods:{
         darLance() {
-            if(this.value < 0.001) {
+            if(this.value < 0.0001) {
                 Swal.fire({
                             position: "bottom-end",
                             type: "error",

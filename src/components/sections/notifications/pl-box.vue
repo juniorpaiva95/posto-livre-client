@@ -116,8 +116,8 @@ export default {
 
   filters: {
     relativeTime(date) {
-      console.log("date being passed");
-      console.log(date);
+      /* console.log("date being passed");
+      console.log(date); */
       let monthHour =
         moment(date).format("DD [de] MMMM") +
         " ⦁ " +
