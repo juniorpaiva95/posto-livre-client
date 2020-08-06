@@ -283,7 +283,7 @@ export default {
       let url = "/api/v1/lot";
 
       let lotFilters = state.filters;
-      lotFilters.include = "fuel,port,auctions,bids";
+      lotFilters.include = "fuel,port.unit,auctions,bids";
 
       let filterQueryString = filterToQuery(state.filters);
 

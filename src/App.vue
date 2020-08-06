@@ -24,10 +24,12 @@ import PlHeaderStation from "@/components/layout/pl-station";
 import PlFooter from "@/components/layout/pl-footer";
 import { mapGetters } from "vuex";
 import Pusher from "pusher-js"; // import Pusher
+import Swal from "sweetalert2";
 
 export default {
   data: () => ({
     connected: false,
+    wsCalled: false,
     chart: null,
     pusher: null,
     app: null,
@@ -37,8 +39,7 @@ export default {
         id: "123456",
         name: "Posto Livre",
         key: "ABCDEFG",
-        // host: "64.225.121.103",
-        host: "localhost",
+        host: process.env.VUE_APP_API_URL,
         path: '/laravel-websockets',
         statisticsEnabled: true
       }
@@ -57,24 +58,24 @@ export default {
     }),
     distributor: function() {
       /* console.log("printing user in distributor check"); */
-      if (this.user) {
-        /* console.log(this.user.roles); */
-        // console.log("connecting with socket");
-        /* this.connect(); */
+      if (this.user && !this.wsCalled) {
+        console.log(this.user.roles);
+        console.log("connecting with socket");
+        this.connect();
+        this.wsCalled = true;
       }
       return this.user !== null && this.user.roles[0].name == "distributor";
     },
     station: function() {
       /* console.log("printing user in gas_station check"); */
-      if (this.user) {
-        /* console.log(this.user.roles); */
-        // console.log("connecting with socket");
+      if (this.user && !this.wsCalled) {
+        console.log(this.user.roles);
+        console.log("connecting with socket");
+        this.connect();
+        this.wsCalled = true;
       }
       return this.user !== null && this.user.roles[0].name == "gas_station";
     }
-  },
-  created() {
-    this.connect();
   },
   methods: {
     async connect() {
@@ -118,7 +119,15 @@ export default {
         .subscribe(`private-Api.User.Models.User.${this.user.id}`)
         .bind("Illuminate\\Notifications\\Events\\BroadcastNotificationCreated", function(data) {
             console.log('Data', data);
-            // alert(JSON.stringify(data));
+            // alert(JSON.stringify(data));`
+            Swal.fire({
+              position: "bottom-end",
+              type: "success",
+              title: data.data.message,
+              timer: 3000,
+              toast: true
+            });
+
           }
         );
     },
