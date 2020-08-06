@@ -67,7 +67,7 @@
           <!--@click="showModal = true"-->
           <td style="max-width: 90px">
             <p class="itemTitle">#COD.</p>
-            {{item.id}}
+            {{item.identifier}}
             <!-- item.id -->
           </td>
           <td>
@@ -113,7 +113,7 @@
                             ]'
             v-if="showModal" @close="showModal = false"></pl-modal>-->
             <p class="itemTitle">LOCAL DE RETIRADA</p>
-            {{item.port.name}} ({{item.port.state_abbreviation}})
+            {{item.port.name}} ({{item.port.unit.state_abbreviation}})
           </td>
           <td>
             <p class="itemTitle">QUANTIDADE TOTAL</p>
@@ -308,10 +308,13 @@ export default {
   created() {
     this.$store.commit("auction/resetState");
     this.items = this.$store.getters["auction/getAuctions"];
+    this.items = this.items.sort((a, b) => a.identifier - b.identifier);
+
     this.$store.watch(
       (state, getters) => getters["auction/getAuctions"],
       (newValue, oldValue) => {
         this.items = newValue;
+
       }
     );
   }

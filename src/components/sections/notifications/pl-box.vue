@@ -6,27 +6,32 @@
       </div>
     </div>
     <div class="pl-notificationBox__body">
-      <div class="pl-notificationBox__component" v-for="item in notificacoes" :key="item.code">
+      <template v-for="(item, notindex) in notificacoes" >
+
+      <div v-if="notindex < max_current_items" class="pl-notificationBox__component" :key="item.id">
         <div class="pl-notificationBox__component--titleArea">
-          <span>{{ item.title }}</span>
-          <span
+          <span>{{ item.data.title }}</span>
+          <!-- <span
             class="pl-notificationBox__component--dot"
             :class="[
                 'pl-notificationBox__component--dot--' + item.class
             ]"
-          ></span>
+          ></span> -->
         </div>
         <div class="pl-notificationBox__component--textArea">
-          <span>{{ item.message }}</span>
+          <span>{{ item.data.message }}</span>
         </div>
         <div class="pl-notificationBox__component--timeArea">
-          <span>{{ item.date | relativeTime }}</span>
-          <span class="pl-notificationBox__component--id">{{ item.code | formatId(4) }}</span>
+          <span>{{ item.created_at | relativeTime }}</span>
+          <!-- <span class="pl-notificationBox__component--id">{{ item.code | formatId(4) }}</span> -->
+          <span class="pl-notificationBox__component--id">{{ item.id }}</span>
         </div>
       </div>
-      <div class="pl-notificationBox__component pl-notificationBox__component--button">
-        <div class="pl-notificationBox__buttonArea">
-          <pl-btn type="wider" text="MOSTRAR MAIS"></pl-btn>
+      </template>
+
+      <div v-if="max_current_items < notificacoes.length " class="pl-notificationBox__component pl-notificationBox__component--button">
+        <div v-on:click="addMore" class="pl-notificationBox__buttonArea">
+          <pl-btn  type="wider" text="MOSTRAR MAIS"></pl-btn>
         </div>
       </div>
     </div>
@@ -36,12 +41,14 @@
 <script>
 import PlBtn from "@/components/atoms/pl-btn";
 import moment from "moment";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
-    "pl-btn": PlBtn
+    "pl-btn": PlBtn,
   },
   data: () => ({
+    max_current_items: 5,
     notificacoes: {
       one: {
         title: "Seu lance está vencendo",
@@ -49,7 +56,7 @@ export default {
         message:
           "Muito bom! Continue acompanhando este leilão e feche seu negócio.",
         date: "2018-08-11 08:59:59",
-        code: "5"
+        code: "5",
       },
       two: {
         title: "Seu lance está vencendo",
@@ -57,7 +64,7 @@ export default {
         message:
           "Muito bom! Continue acompanhando este leilão e feche seu negócio.",
         date: "2018-08-11 08:59:59",
-        code: "41"
+        code: "41",
       },
       three: {
         title: "Seu lance está vencendo",
@@ -65,7 +72,7 @@ export default {
         message:
           "Muito bom! Continue acompanhando este leilão e feche seu negócio.",
         date: "2018-08-11 08:59:59",
-        code: "415"
+        code: "415",
       },
       four: {
         title: "Seu lance está vencendo",
@@ -73,21 +80,44 @@ export default {
         message:
           "Muito bom! Continue acompanhando este leilão e feche seu negócio.",
         date: "2018-08-11 08:59:59",
-        code: "45121"
+        code: "45121",
       },
-      five: {
-        title: "Seu lance está vencendo",
-        class: "success",
-        message:
-          "Muito bom! Continue acompanhando este leilão e feche seu negócio.",
-        date: "2018-08-11 08:59:59",
-        code: "1"
-      }
     },
-    visualizadas: {}
+    visualizadas: {},
   }),
+  computed: {
+    ...mapGetters({ user: "auth/getUser" }),
+    getCurrentUser: function () {
+      return this.user;
+    },
+  },
+  methods: {
+    addMore: function () {
+      this.max_current_items = this.max_current_items + 5;
+    }
+  },
+  async created() {
+    /* console.log("is the user ok??");
+        console.log(this.getCurrentUser); */
+    await this.$store.dispatch("notification/fetchNotifications", {
+      user_id: this.getCurrentUser.id,
+    });
+    this.notificacoes = await this.$store.getters[
+      "notification/getNotifications"
+    ];
+    //sorting by date
+    this.notificacoes.sort(function(a,b){
+      return new Date(b.created_at) - new Date(a.created_at);
+    });  
+
+    /* console.log("getting the notifications in component");
+    console.log(this.notificacoes); */
+  },
+
   filters: {
     relativeTime(date) {
+      console.log("date being passed");
+      console.log(date);
       let monthHour =
         moment(date).format("DD [de] MMMM") +
         " ⦁ " +
@@ -113,20 +143,18 @@ export default {
           M: monthHour,
           MM: monthHour,
           y: dateYear,
-          yy: dateYear
-        }
+          yy: dateYear,
+        },
       });
 
-      return moment(date, "YYYY-MM-DD hh:mm:ss")
-        .startOf(date)
-        .fromNow();
+      return moment(date, "YYYY-MM-DD hh:mm:ss").startOf(date).fromNow();
     },
     formatId(code, len) {
       code = code.toString();
       if (code.length >= len) return "#" + code;
       else return "#" + ("0000" + code).slice(-len);
-    }
-  }
+    },
+  },
 };
 </script>
 

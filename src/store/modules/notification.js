@@ -1,19 +1,25 @@
 import Vue from 'vue'
 import store from '@/store/store'
+import apiService from "@/services/api";
+import Swal from "sweetalert2";
+import { filterToQuery } from "../../utils/api/util";
 
 export default {
 	namespaced: true,
 	state: {
 		alerts: [],
-		current: null
+		current: null,
+		notifications: []
 	},
 
 	getters: {
 		getCurrent(state) {
 			return state.current
 		},
+		getNotifications(state) {
+			return state.notifications
+		},
 	},
-
 	mutations: {
 		add(state, payload) {
 			let alert = {
@@ -50,6 +56,21 @@ export default {
 	},
 
 	actions: {
-		//
-	}
+		fetchNotifications: async ({ state }, { user_id }) => {
+			console.log("idBeingPassedToNotification");
+			console.log(user_id);
+			/* await apiService.get(`api/v1/notifications?search=notifiable_id%3A${user_id}&searchFields=notifiable_id%3A%3D`).then(response => { */
+			await apiService.get(`api/v1/notifications`).then(response => {
+				state.notifications = response.data.notifications
+			}).catch(error => {
+				Swal.fire({
+					position: "bottom-end",
+					type: "error",
+					title: error.message,
+					timer: 3000,
+					toast: true
+				});
+			})
+		},
+	},
 }

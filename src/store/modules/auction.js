@@ -305,7 +305,7 @@ export default {
     },
     fetchPorts: async ({ state, commit, rootState }) => {
       let user = await rootState.auth.user;
-      let url = "/api/v1/ports";
+      let url = "/api/v1/ports?include=unit";
       await apiService.get(`${url}`).then(response => {
         if (response.status == 200) {
           let data = response.data.ports;

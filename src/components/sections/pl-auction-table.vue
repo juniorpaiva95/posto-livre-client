@@ -63,7 +63,7 @@
                         <tr  class="pl-bidTable__item"  :key="i" v-if="isOverdue(item.date_finish)" :class="`${item.fuel.slug}`"> 
                             <!--@click="showModal = true"-->
                             <td>
-                                {{item.id}}
+                                {{item.identifier}}
                             </td>
                             <td>
                                 {{ item.created_at | datetime }}
@@ -87,7 +87,11 @@
                             <td>
                                 <template v-if="item.lot">
                                     <!-- use the modal component, pass in the prop -->
-                                    {{item.lot.port.name}}
+                                    {{item.lot.port.name}} ({{item.lot.port.unit.state_abbreviation}})
+                                </template>
+                                <template v-else>
+                                    <!-- use the modal component, pass in the prop -->
+                                    -
                                 </template>
                             </td>   
                             <td>
@@ -99,7 +103,7 @@
                                 <div class="bid-item">
                                     <!-- <span class="bid-value">{{item.bid.formatted || item.bid}}</span> -->
                                     <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
-                                    <button v-if="!isOverdue(item.date_finish)" class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
+                                    <button v-if="!isOverdueCancel(item.date_finish)" class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
                                 </div>    
                             </td>
 
@@ -109,7 +113,7 @@
                     <tr  class="pl-bidTable__item"  :key="i" v-else :class="`${item.fuel.slug}`"> 
                         <!--@click="showModal = true"-->
                         <td>
-                            {{item.id}}
+                            {{item.identifier}}
                         </td>
                         <td>
                             {{ item.created_at | datetime }}
@@ -133,8 +137,13 @@
                         <td>
                             <template v-if="item.lot">
                                 <!-- use the modal component, pass in the prop -->
-                                {{item.lot.port.name}}
+                                {{item.lot.port.name}} ({{item.lot.port.unit.state_abbreviation}})
                             </template>
+                            <template v-else>
+                                <!-- use the modal component, pass in the prop -->
+                                -
+                            </template>
+
                         </td>   
                         <td>
                             <!-- use the modal component, pass in the prop -->
@@ -145,7 +154,7 @@
                             <div class="bid-item">
                                 <!-- <span class="bid-value">{{item.bid.formatted || item.bid}}</span> -->
                                 <button class="btn pl-btn--table bid-btn" type="button" @click="openModal(item)">...</button>
-                                <button v-if="!isOverdue(item.date_finish)" class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
+                                <button v-if="!isOverdueStart(item.date_start)" class="pl-btn btn pl-btn--table" type="button" @click="cancelarPedido(item)">Cancelar Pedido</button>
                             </div>    
                         </td>
 
@@ -225,6 +234,14 @@ export default {
             var diffTime = eventTimeFinish.unix() - currentTime.unix();
             return diffTime < 0;
         },
+        isOverdueStart(date_start) {
+
+            var eventTimeFinish = moment(date_start).add(5, 'hours');
+            var currentTime = moment();
+            var diffTime = eventTimeFinish.unix() - currentTime.unix();
+
+            return diffTime < 0;
+        },
         openModal(item) {
             console.log("item being passed to open modal");
             this.modalData = item;
@@ -261,10 +278,13 @@ export default {
         if(window.location.pathname === '/bids') {
             await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
+
+            this.items = this.items.sort((a, b) => b.identifier - a.identifier);
+
         } else {
             this.user = await this.$store.getters['auth/getUser'];
             
-            await this.$store.commit('auction/setFilters', { status : 2, include: "station,fuel,uploads,lot.port,lot.bids", limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
+            await this.$store.commit('auction/setFilters', { status : 2, include: "station,fuel,uploads,lot.port.unit,lot.bids", limit: 30, search: `station_id:${this.user.station.id}`, searchFields: 'station_id:=' });
             await this.$store.dispatch('auction/fetchAuctions');
             this.items = await this.$store.getters['auction/getAuctions'];
             this.items.forEach(e => {
@@ -275,6 +295,9 @@ export default {
             /* console.log(this.items); */
             if(this.items.lot && this.items.lot.bids)
                 this.items.bids.bids = this.items.lot.bids;
+
+            this.items = this.items.sort((a, b) => b.identifier - a.identifier);
+
 
         }
 

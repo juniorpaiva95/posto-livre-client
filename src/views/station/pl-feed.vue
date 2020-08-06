@@ -66,7 +66,7 @@ export default {
         this.$store.dispatch('auction/fetchLot').then(auctions => {
             console.log(" this is the auctions returned");
             console.log(auctions);
-            this.auctions = auctions;
+            this.auctions = auctions; 
         }) 
     } */
 }

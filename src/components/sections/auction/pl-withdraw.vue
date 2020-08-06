@@ -17,7 +17,7 @@
                checked
                :value="item.id"
                :id="`pl-createAuction__withdraw--name` + key">
-        <label :for="'pl-createAuction__withdraw--name' + key">{{ item.name }} ({{item.state_abbreviation}})</label>
+        <label :for="'pl-createAuction__withdraw--name' + key">{{ item.name }} ({{item.unit.state_abbreviation}})</label>
       </div>
     </div>
   </div>
