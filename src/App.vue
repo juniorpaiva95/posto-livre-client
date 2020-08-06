@@ -37,7 +37,8 @@ export default {
         id: "123456",
         name: "Posto Livre",
         key: "ABCDEFG",
-        host: "35.202.204.34",
+        // host: "64.225.121.103",
+        host: "localhost",
         path: '/laravel-websockets',
         statisticsEnabled: true
       }
@@ -58,7 +59,7 @@ export default {
       /* console.log("printing user in distributor check"); */
       if (this.user) {
         /* console.log(this.user.roles); */
-        console.log("connecting with socket");
+        // console.log("connecting with socket");
         /* this.connect(); */
       }
       return this.user !== null && this.user.roles[0].name == "distributor";
@@ -67,37 +68,38 @@ export default {
       /* console.log("printing user in gas_station check"); */
       if (this.user) {
         /* console.log(this.user.roles); */
-        console.log("connecting with socket");
-        this.connect();
+        // console.log("connecting with socket");
       }
       return this.user !== null && this.user.roles[0].name == "gas_station";
     }
   },
+  created() {
+    this.connect();
+  },
   methods: {
-    connect() {
+    async connect() {
       this.app = this.apps[0];
-      this.pusher = new Pusher(this.app.key, {
+      this.pusher = new Pusher('ABCDEFG', {
         wsHost:
           this.app.host === null ? window.location.hostname : this.app.host,
         wsPort: this.port === null ? 6001 : this.port,
         wssPort: this.port === null ? 6001 : this.port,
-        wsPath: this.app.path === null ? "" : this.app.path,
+        // wsPath: this.app.path === null ? "" : this.app.path,
         disableStats: true,
-        authEndpoint: "http://35.202.204.34/laravel-websockets/auth",
+        authEndpoint: "http://localhost/laravel-websockets/auth",
         auth: {
           headers: {
             "X-App-ID": this.app.id
           }
         },
-        enabledTransports: ["ws", "flash"]
+        enabledTransports: ["ws"]
       });
-      console.log("IXE", this.pusher);
       this.pusher.connection.bind("state_change", states => {
         $("div#status").text("Channels current state is " + states.current);
       });
       this.pusher.connection.bind("connected", () => {
+        // console.log("PUSHER CONNECTED");
         this.connected = true;
-        this.loadChart();
       });
       this.pusher.connection.bind("disconnected", () => {
         this.connected = false;
@@ -111,40 +113,15 @@ export default {
           throw new Error("Over capacity");
         }
       });
-      this.subscribeToAllChannels();
-      /* this.subscribeToStatistics(); */
-
+      
       this.pusher
-        .subscribe(
-          "private-Api.User.Models.User.1aa84470-c586-11ea-a188-27ad4eb2d264"
-        )
-        .bind(
-          "Illuminate\\Notifications\\Events\\BroadcastNotificationCreated",
-          function(data) {
-            console.log(data);
-            alert(JSON.stringify(data));
+        .subscribe(`private-Api.User.Models.User.${this.user.id}`)
+        .bind("Illuminate\\Notifications\\Events\\BroadcastNotificationCreated", function(data) {
+            console.log('Data', data);
+            // alert(JSON.stringify(data));
           }
         );
     },
-    subscribeToAllChannels() {
-      [
-        "disconnection",
-        "connection",
-        "vacated",
-        "occupied",
-        "subscribed",
-        "client-message",
-        "api-message"
-      ].forEach(channelName => this.subscribeToChannel(channelName));
-    },
-    subscribeToChannel(channel) {
-      this.pusher
-        .subscribe("private-websockets-dashboard-" + channel)
-        .bind("log-message", data => {
-          console.log(data);
-          this.logs.push(data);
-        });
-    }
   },
   components: {
     "pl-header": PlHeader,
